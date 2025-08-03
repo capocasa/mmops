@@ -856,3 +856,61 @@ template convert*[N, T](a: Mm[N, T]): auto =
     Mm[N, int32](mm256_cvttps_epi32(M256(a)))
   else:
     {.error: "Convert only supported between int32 and float32"}
+
+# --- Array-Style Element Access ---
+template `[]`*[N, T](a: Mm[N, T], index: int): T =
+  ## Extract element from vector at specified index (array-style access)
+  ## 
+  ## Performance Note: For frequent single-element updates of float32 values,
+  ## consider maintaining 8 local variables and using `load()` for better performance.
+  when T is float32:
+    # Use bitcast method for extraction (simpler than 128-bit lane splitting)
+    let asInt = mm256_extract_epi32(bitcast(a, Mm[N, int32]), int32(index))
+    cast[float32](asInt)
+  elif T is float64:
+    let asInt = mm256_extract_epi64(bitcast(a, Mm[N, int64]), int32(index))
+    cast[float64](asInt)
+  elif T is int32:
+    mm256_extract_epi32(M256i(a), int32(index))
+  elif T is int64:
+    mm256_extract_epi64(M256i(a), int32(index))
+  elif T is int16 | uint16:
+    cast[T](mm256_extract_epi16(M256i(a), int32(index)))
+  elif T is int8 | uint8:
+    cast[T](mm256_extract_epi8(M256i(a), int32(index)))
+  else:
+    {.error: "Element access not supported for this type"}
+
+template `[]=`*[N, T](a: var Mm[N, T], index: int, value: T) =
+  ## Set element in vector at specified index (array-style assignment)
+  ## 
+  ## Performance Note: For frequent single-element updates of float32 values,
+  ## consider maintaining 8 local variables and using `load()` for better performance.
+  ## Example: `let vec = load([f0, f1, f2, f3, f4, f5, f6, f7])`
+  when T is float32:
+    # Use 128-bit lane splitting for better float32 performance
+    when index < 4:
+      # Work on low 128-bit lane (elements 0-3)
+      let low128 = mm256_castps256_ps128(M256(a))
+      let scalar = mm_set_ss(value)
+      let updated = mm_insert_ps(low128, scalar, (index shl 4) or 0x0)
+      a = Mm[N, T](mm256_insertf128_ps(M256(a), updated, 0))
+    else:
+      # Work on high 128-bit lane (elements 4-7)
+      let high128 = mm256_extractf128_ps(M256(a), 1)
+      let scalar = mm_set_ss(value)
+      let updated = mm_insert_ps(high128, scalar, ((index-4) shl 4) or 0x0)
+      a = Mm[N, T](mm256_insertf128_ps(M256(a), updated, 1))
+  elif T is float64:
+    let asInt = cast[int64](value)
+    a = bitcast(Mm[N, int64](mm256_insert_epi64(bitcast(a, Mm[N, int64]), asInt, int32(index))), Mm[N, float64])
+  elif T is int32:
+    a = Mm[N, T](mm256_insert_epi32(M256i(a), value, int32(index)))
+  elif T is int64:
+    a = Mm[N, T](mm256_insert_epi64(M256i(a), value, int32(index)))
+  elif T is int16 | uint16:
+    a = Mm[N, T](mm256_insert_epi16(M256i(a), cast[int16](value), int32(index)))
+  elif T is int8 | uint8:
+    a = Mm[N, T](mm256_insert_epi8(M256i(a), cast[int8](value), int32(index)))
+  else:
+    {.error: "Element assignment not supported for this type"}
