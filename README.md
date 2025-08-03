@@ -4,7 +4,7 @@ Zero-cost typed SIMD wrapper for Nim providing high-performance vector operation
 
 ## Overview
 
-**mmops** is a comprehensive SIMD library that provides a safe, typed interface to AVX2 vector operations. It offers zero-overhead abstraction over Intel's AVX2 intrinsics while maintaining Nim's type safety and expressiveness.
+Zero-cost typed SIMD operations for Nim using familiar math operators (`+`, `-`, `*`, `/`, etc.) that compile directly to AVX2 instructions.
 
 ### Key Features
 
