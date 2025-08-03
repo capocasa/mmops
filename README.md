@@ -1,4 +1,4 @@
-# mmops - Multimedia Operators
+# mmops - easy SIMD for Nim
 
 Zero-cost typed SIMD wrapper for Nim providing high-performance vector operations using AVX2 intrinsics.
 
