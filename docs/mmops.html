@@ -5,7 +5,7 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>src/mmops</title>
+<title>mmops</title>
 
 <!-- Google fonts -->
 <link href='https://fonts.googleapis.com/css?family=Lato:400,600,900' rel='stylesheet' type='text/css'/>
@@ -24,7 +24,7 @@
 <body>
   <div class="document" id="documentId">
     <div class="container">
-      <h1 class="title">src/mmops</h1>
+      <h1 class="title">mmops</h1>
       <div class="row">
   <div class="three columns">
     <div class="theme-select-wrapper">
@@ -143,6 +143,14 @@ else:
 </ul>
 <ul class="simple nested-toc-section">>=
   <li><a class="reference" href="#%3E%3D.t%2CMm%5BN%2CT%5D%2CMm%5BN%2CT%5D" title="`&gt;=`[N, T](a, b: Mm[N, T]): Mm[N, T]">`&gt;=`[N, T](a, b: Mm[N, T]): Mm[N, T]</a></li>
+
+</ul>
+<ul class="simple nested-toc-section">[]
+  <li><a class="reference" href="#%5B%5D.t%2CMm%5BN%2CT%5D%2Cint" title="`[]`[N, T](a: Mm[N, T]; index: int): T">`[]`[N, T](a: Mm[N, T]; index: int): T</a></li>
+
+</ul>
+<ul class="simple nested-toc-section">[]=
+  <li><a class="reference" href="#%5B%5D%3D.t%2CMm%5BN%2CT%5D%2Cint%2CT" title="`[]=`[N, T](a: var Mm[N, T]; index: int; value: T)">`[]=`[N, T](a: var Mm[N, T]; index: int; value: T)</a></li>
 
 </ul>
 <ul class="simple nested-toc-section">abs
@@ -715,6 +723,32 @@ else:
   <dd>
     
     Compare packed elements for greater-than-or-equal
+    
+  </dd>
+</div>
+
+</div>
+<div id="[]-templates-all">
+  <div id="[].t,Mm[N,T],int">
+  <dt><pre><span class="Keyword">template</span> <a href="#%5B%5D.t%2CMm%5BN%2CT%5D%2Cint"><span class="Identifier">`[]`</span></a><span class="Other">[</span><span class="Identifier">N</span><span class="Other">,</span> <span class="Identifier">T</span><span class="Other">]</span><span class="Other">(</span><span class="Identifier">a</span><span class="Other">:</span> <a href="mmops.html#Mm"><span class="Identifier">Mm</span></a><span class="Other">[</span><span class="Identifier">N</span><span class="Other">,</span> <span class="Identifier">T</span><span class="Other">]</span><span class="Other">;</span> <span class="Identifier">index</span><span class="Other">:</span> <span class="Identifier">int</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">T</span></pre></dt>
+  <dd>
+    
+    <p>Extract element from vector at specified index (array-style access)</p>
+<p>Performance Note: For frequent single-element updates of float32 values, consider maintaining 8 local variables and using <tt class="docutils literal"><span class="pre"><span class="Identifier">load</span><span class="Punctuation">(</span><span class="Punctuation">)</span></span></tt> for better performance.</p>
+
+    
+  </dd>
+</div>
+
+</div>
+<div id="[]=-templates-all">
+  <div id="[]=.t,Mm[N,T],int,T">
+  <dt><pre><span class="Keyword">template</span> <a href="#%5B%5D%3D.t%2CMm%5BN%2CT%5D%2Cint%2CT"><span class="Identifier">`[]=`</span></a><span class="Other">[</span><span class="Identifier">N</span><span class="Other">,</span> <span class="Identifier">T</span><span class="Other">]</span><span class="Other">(</span><span class="Identifier">a</span><span class="Other">:</span> <span class="Keyword">var</span> <a href="mmops.html#Mm"><span class="Identifier">Mm</span></a><span class="Other">[</span><span class="Identifier">N</span><span class="Other">,</span> <span class="Identifier">T</span><span class="Other">]</span><span class="Other">;</span> <span class="Identifier">index</span><span class="Other">:</span> <span class="Identifier">int</span><span class="Other">;</span> <span class="Identifier">value</span><span class="Other">:</span> <span class="Identifier">T</span><span class="Other">)</span></pre></dt>
+  <dd>
+    
+    <p>Set element in vector at specified index (array-style assignment)</p>
+<p>Performance Note: For frequent single-element updates of float32 values, consider maintaining 8 local variables and using <tt class="docutils literal"><span class="pre"><span class="Identifier">load</span><span class="Punctuation">(</span><span class="Punctuation">)</span></span></tt> for better performance. Example: <tt class="docutils literal"><span class="pre"><span class="Keyword">let</span> <span class="Identifier">vec</span> <span class="Operator">=</span> <span class="Identifier">load</span><span class="Punctuation">(</span><span class="Punctuation">[</span><span class="Identifier">f0</span><span class="Punctuation">,</span> <span class="Identifier">f1</span><span class="Punctuation">,</span> <span class="Identifier">f2</span><span class="Punctuation">,</span> <span class="Identifier">f3</span><span class="Punctuation">,</span> <span class="Identifier">f4</span><span class="Punctuation">,</span> <span class="Identifier">f5</span><span class="Punctuation">,</span> <span class="Identifier">f6</span><span class="Punctuation">,</span> <span class="Identifier">f7</span><span class="Punctuation">]</span><span class="Punctuation">)</span></span></tt></p>
+
     
   </dd>
 </div>
@@ -1664,7 +1698,7 @@ else:
       <div class="twelve-columns footer">
         <span class="nim-sprite"></span>
         <br>
-        <small style="color: var(--hint);">Made with Nim. Generated: 2025-07-30 13:17:41 UTC</small>
+        <small style="color: var(--hint);">Made with Nim. Generated: 2025-08-03 19:30:35 UTC</small>
       </div>
     </div>
   </div>
