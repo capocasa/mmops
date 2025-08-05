@@ -453,3 +453,184 @@ suite "mmops - Multimedia Operators Test Suite":
       
       checkArrayEqual(int_result, [1'i32, 2, 3, 4, 5, 6, 7, 8])
       checkArrayEqual(float_result, [1.0'f32, 2.0, 3.0, 4.0, 5.0, 6.0, 7.0, 8.0])
+
+  suite "Array-Style Access Operations":
+    test "[] operator - element access for float32":
+      let vec_f32 = load([10.0'f32, 20.0, 30.0, 40.0, 50.0, 60.0, 70.0, 80.0])
+      
+      check vec_f32[0] == 10.0'f32
+      check vec_f32[1] == 20.0'f32
+      check vec_f32[2] == 30.0'f32
+      check vec_f32[3] == 40.0'f32
+      check vec_f32[4] == 50.0'f32
+      check vec_f32[5] == 60.0'f32
+      check vec_f32[6] == 70.0'f32
+      check vec_f32[7] == 80.0'f32
+
+    test "[] operator - element access for float64":
+      let vec_f64 = load([1.5'f64, 2.5, 3.5, 4.5])
+      
+      check vec_f64[0] == 1.5'f64
+      check vec_f64[1] == 2.5'f64
+      check vec_f64[2] == 3.5'f64
+      check vec_f64[3] == 4.5'f64
+
+    test "[] operator - element access for int32":
+      let vec_i32 = load([100'i32, 200, 300, 400, 500, 600, 700, 800])
+      
+      check vec_i32[0] == 100'i32
+      check vec_i32[1] == 200'i32
+      check vec_i32[2] == 300'i32
+      check vec_i32[3] == 400'i32
+      check vec_i32[4] == 500'i32
+      check vec_i32[5] == 600'i32
+      check vec_i32[6] == 700'i32
+      check vec_i32[7] == 800'i32
+
+    test "[] operator - element access for int64":
+      let vec_i64 = load([1000000000000'i64, 2000000000000, 3000000000000, 4000000000000])
+      
+      check vec_i64[0] == 1000000000000'i64
+      check vec_i64[1] == 2000000000000'i64
+      check vec_i64[2] == 3000000000000'i64
+      check vec_i64[3] == 4000000000000'i64
+
+    test "[] operator - element access for int16":
+      let vec_i16 = load([10'i16, 20, 30, 40, 50, 60, 70, 80, 90, 100, 110, 120, 130, 140, 150, 160])
+      
+      check vec_i16[0] == 10'i16
+      check vec_i16[5] == 60'i16
+      check vec_i16[10] == 110'i16
+      check vec_i16[15] == 160'i16
+
+    test "[] operator - element access for int8":
+      let vec_i8 = load([1'i8, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32])
+      
+      check vec_i8[0] == 1'i8
+      check vec_i8[7] == 8'i8
+      check vec_i8[15] == 16'i8
+      check vec_i8[31] == 32'i8
+
+    test "[]= operator - element assignment for float32":
+      var vec_f32 = zero(Mm[8, float32])
+      
+      vec_f32[0] = 1.5'f32
+      vec_f32[1] = 2.5'f32
+      vec_f32[2] = 3.5'f32
+      vec_f32[3] = 4.5'f32
+      vec_f32[4] = 5.5'f32
+      vec_f32[5] = 6.5'f32
+      vec_f32[6] = 7.5'f32
+      vec_f32[7] = 8.5'f32
+      
+      let result = store(vec_f32)
+      let expected = [1.5'f32, 2.5, 3.5, 4.5, 5.5, 6.5, 7.5, 8.5]
+      checkArrayEqual(result, expected)
+
+    test "[]= operator - element assignment for float64":
+      var vec_f64 = zero(Mm[4, float64])
+      
+      vec_f64[0] = 10.5'f64
+      vec_f64[1] = 20.5'f64
+      vec_f64[2] = 30.5'f64
+      vec_f64[3] = 40.5'f64
+      
+      let result = store(vec_f64)
+      let expected = [10.5'f64, 20.5, 30.5, 40.5]
+      checkArrayEqual(result, expected)
+
+    test "[]= operator - element assignment for int32":
+      var vec_i32 = zero(Mm[8, int32])
+      
+      vec_i32[0] = 111'i32
+      vec_i32[1] = 222'i32
+      vec_i32[2] = 333'i32
+      vec_i32[3] = 444'i32
+      vec_i32[4] = 555'i32
+      vec_i32[5] = 666'i32
+      vec_i32[6] = 777'i32
+      vec_i32[7] = 888'i32
+      
+      let result = store(vec_i32)
+      let expected = [111'i32, 222, 333, 444, 555, 666, 777, 888]
+      checkArrayEqual(result, expected)
+
+    test "[]= operator - element assignment for int64":
+      var vec_i64 = zero(Mm[4, int64])
+      
+      vec_i64[0] = 123456789012'i64
+      vec_i64[1] = 234567890123'i64
+      vec_i64[2] = 345678901234'i64
+      vec_i64[3] = 456789012345'i64
+      
+      let result = store(vec_i64)
+      let expected = [123456789012'i64, 234567890123, 345678901234, 456789012345]
+      checkArrayEqual(result, expected)
+
+    test "[]= operator - element assignment for int16":
+      var vec_i16 = zero(Mm[16, int16])
+      
+      vec_i16[0] = 1000'i16
+      vec_i16[5] = 5000'i16
+      vec_i16[10] = 10000'i16
+      vec_i16[15] = 15000'i16
+      
+      check vec_i16[0] == 1000'i16
+      check vec_i16[5] == 5000'i16
+      check vec_i16[10] == 10000'i16
+      check vec_i16[15] == 15000'i16
+
+    test "[]= operator - element assignment for int8":
+      var vec_i8 = zero(Mm[32, int8])
+      
+      vec_i8[0] = 42'i8
+      vec_i8[7] = 84'i8
+      vec_i8[15] = 126'i8
+      vec_i8[31] = -42'i8
+      
+      check vec_i8[0] == 42'i8
+      check vec_i8[7] == 84'i8
+      check vec_i8[15] == 126'i8
+      check vec_i8[31] == -42'i8
+
+    test "[]= operator - unsigned integer types":
+      var vec_u8 = zero(Mm[32, uint8])
+      var vec_u16 = zero(Mm[16, uint16])
+      
+      vec_u8[0] = 255'u8
+      vec_u8[31] = 128'u8
+      vec_u16[0] = 65535'u16
+      vec_u16[15] = 32768'u16
+      
+      check vec_u8[0] == 255'u8
+      check vec_u8[31] == 128'u8
+      check vec_u16[0] == 65535'u16
+      check vec_u16[15] == 32768'u16
+
+    test "mixed [] and []= operations":
+      var vec_f32 = load([1.0'f32, 2.0, 3.0, 4.0, 5.0, 6.0, 7.0, 8.0])
+      
+      let original_value = vec_f32[3]
+      check original_value == 4.0'f32
+      
+      vec_f32[3] = 99.5'f32
+      check vec_f32[3] == 99.5'f32
+      
+      vec_f32[0] = vec_f32[7]
+      check vec_f32[0] == 8.0'f32
+      
+      let final_result = store(vec_f32)
+      let expected = [8.0'f32, 2.0, 3.0, 99.5, 5.0, 6.0, 7.0, 8.0]
+      checkArrayEqual(final_result, expected)
+
+    test "boundary index access":
+      let vec_f32 = load([1.0'f32, 2.0, 3.0, 4.0, 5.0, 6.0, 7.0, 8.0])
+      let vec_i64 = load([100'i64, 200, 300, 400])
+      let vec_i8 = splat[32](42'i8)
+      
+      check vec_f32[0] == 1.0'f32
+      check vec_f32[7] == 8.0'f32
+      check vec_i64[0] == 100'i64
+      check vec_i64[3] == 400'i64
+      check vec_i8[0] == 42'i8
+      check vec_i8[31] == 42'i8

@@ -840,6 +840,10 @@ template bitcast*[N, T, U](a: Mm[N, T], targetType: typedesc[Mm[N, U]]): Mm[N, U
     Mm[N, U](mm256_castps_si256(M256(a)))
   elif T is int32 and U is float32:
     Mm[N, U](mm256_castsi256_ps(M256i(a)))
+  elif T is float64 and U is int64:
+    Mm[N, U](mm256_castpd_si256(M256d(a)))
+  elif T is int64 and U is float64:
+    Mm[N, U](mm256_castsi256_pd(M256i(a)))
   elif T is float64 and U is float32:
     Mm[N, U](mm256_castpd_ps(M256d(a)))
   elif T is float32 and U is float64:
@@ -864,10 +868,10 @@ template `[]`*[N, T](a: Mm[N, T], index: int): T =
   ## consider maintaining 8 local variables and using `load()` for better performance.
   when T is float32:
     # Use bitcast method for extraction (simpler than 128-bit lane splitting)
-    let asInt = mm256_extract_epi32(bitcast(a, Mm[N, int32]), int32(index))
+    let asInt = mm256_extract_epi32(M256i(bitcast(a, Mm[N, int32])), int32(index))
     cast[float32](asInt)
   elif T is float64:
-    let asInt = mm256_extract_epi64(bitcast(a, Mm[N, int64]), int32(index))
+    let asInt = mm256_extract_epi64(M256i(bitcast(a, Mm[N, int64])), int32(index))
     cast[float64](asInt)
   elif T is int32:
     mm256_extract_epi32(M256i(a), int32(index))
@@ -902,7 +906,7 @@ template `[]=`*[N, T](a: var Mm[N, T], index: int, value: T) =
       a = Mm[N, T](mm256_insertf128_ps(M256(a), updated, 1))
   elif T is float64:
     let asInt = cast[int64](value)
-    a = bitcast(Mm[N, int64](mm256_insert_epi64(bitcast(a, Mm[N, int64]), asInt, int32(index))), Mm[N, float64])
+    a = bitcast(Mm[N, int64](mm256_insert_epi64(M256i(bitcast(a, Mm[N, int64])), asInt, int32(index))), Mm[N, float64])
   elif T is int32:
     a = Mm[N, T](mm256_insert_epi32(M256i(a), value, int32(index)))
   elif T is int64:
