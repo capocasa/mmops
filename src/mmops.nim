@@ -19,44 +19,43 @@ const
 
 # --- Type System ---
 type 
-  Width* = enum
-    w64 = 4   ## 4 × 64-bit elements (256 bits total)
-    w32 = 8   ## 8 × 32-bit elements (256 bits total)
-    w16 = 16  ## 16 × 16-bit elements (256 bits total)
-    w8 = 32   ## 32 × 8-bit elements (256 bits total)
-  
-  Mm*[N: static Width, T: SomeNumber] = distinct (
-    when T is float32: M256 
-    elif T is float64: M256d 
-    else: M256i
+  Width* = static[int]  ## Number of elements in SIMD vector (4, 8, 16, or 32)
+
+  Mm*[N: Width, T: SomeNumber] = distinct (
+    when N in [4, 8, 16, 32]:
+      when T is float32: M256 
+      elif T is float64: M256d 
+      else: M256i
+    else:
+      {.error: "Width must be 4, 8, 16, or 32".}
   )
 
 
 # --- Array Conversion ---
-proc load*[T](p: array[32, T]): Mm[w8, T] =
-  ## Load array into Mm vector (assumes 8-bit elements = 32 elements)
-  Mm[w8, T](mm256_loadu_si256(cast[pointer](unsafeAddr p[0])))
+proc load*[T](p: array[32, T]): Mm[32, T] =
+  ## Load array into Mm vector (32 elements)
+  Mm[32, T](mm256_loadu_si256(cast[pointer](unsafeAddr p[0])))
 
-proc load*[T](p: array[16, T]): Mm[w16, T] =
-  ## Load array into Mm vector (assumes 16-bit elements = 16 elements)
-  Mm[w16, T](mm256_loadu_si256(cast[pointer](unsafeAddr p[0])))
+proc load*[T](p: array[16, T]): Mm[16, T] =
+  ## Load array into Mm vector (16 elements)
+  Mm[16, T](mm256_loadu_si256(cast[pointer](unsafeAddr p[0])))
 
-proc load*[T](p: array[8, T]): Mm[w32, T] =
-  ## Load array into Mm vector (assumes 32-bit elements = 8 elements)
+proc load*[T](p: array[8, T]): Mm[8, T] =
+  ## Load array into Mm vector (8 elements)
   when T is float32:
-    Mm[w32, T](mm256_loadu_ps(cast[pointer](unsafeAddr p[0])))
+    Mm[8, T](mm256_loadu_ps(cast[pointer](unsafeAddr p[0])))
   else:
-    Mm[w32, T](mm256_loadu_si256(cast[pointer](unsafeAddr p[0])))
+    Mm[8, T](mm256_loadu_si256(cast[pointer](unsafeAddr p[0])))
 
-proc load*[T](p: array[4, T]): Mm[w64, T] =
-  ## Load array into Mm vector (assumes 64-bit elements = 4 elements)
+proc load*[T](p: array[4, T]): Mm[4, T] =
+  ## Load array into Mm vector (4 elements)
   when T is float64:
-    Mm[w64, T](mm256_loadu_pd(cast[pointer](unsafeAddr p[0])))
+    Mm[4, T](mm256_loadu_pd(cast[pointer](unsafeAddr p[0])))
   else: # 64-bit integers
-    Mm[w64, T](mm256_loadu_si256(cast[pointer](unsafeAddr p[0])))
+    Mm[4, T](mm256_loadu_si256(cast[pointer](unsafeAddr p[0])))
 
-template store*[T](m: Mm[w32, T]): array[8, T] =
-  ## Store Mm vector to array (32-bit elements)
+template store*[T](m: Mm[8, T]): array[8, T] =
+  ## Store Mm vector to array (8 elements)
   var result: array[8, T]
   when T is float32:
     mm256_storeu_ps(cast[pointer](addr result[0]), M256(m))
@@ -66,8 +65,8 @@ template store*[T](m: Mm[w32, T]): array[8, T] =
     mm256_storeu_si256(cast[pointer](addr result[0]), M256i(m))
   result
 
-template store*[T](m: Mm[w64, T]): array[4, T] =
-  ## Store Mm vector to array (64-bit elements)
+template store*[T](m: Mm[4, T]): array[4, T] =
+  ## Store Mm vector to array (4 elements)
   var result: array[4, T]
   when T is float64:
     mm256_storeu_pd(cast[pointer](addr result[0]), M256d(m))
@@ -75,14 +74,14 @@ template store*[T](m: Mm[w64, T]): array[4, T] =
     mm256_storeu_si256(cast[pointer](addr result[0]), M256i(m))
   result
 
-template store*[T](m: Mm[w16, T]): array[16, T] =
-  ## Store Mm vector to array (16-bit elements)
+template store*[T](m: Mm[16, T]): array[16, T] =
+  ## Store Mm vector to array (16 elements)
   var result: array[16, T]
   mm256_storeu_si256(cast[pointer](addr result[0]), M256i(m))
   result
 
-template store*[T](m: Mm[w8, T]): array[32, T] =
-  ## Store Mm vector to array (8-bit elements)
+template store*[T](m: Mm[32, T]): array[32, T] =
+  ## Store Mm vector to array (32 elements)
   var result: array[32, T]
   mm256_storeu_si256(cast[pointer](addr result[0]), M256i(m))
   result
@@ -128,46 +127,46 @@ template splat*[N](val: uint64): Mm[N, uint64] =
   ## Broadcast a 64-bit unsigned integer value to all elements
   Mm[N, uint64](mm256_set1_epi64x(cast[int64](val)))
 
-template set*(e7, e6, e5, e4, e3, e2, e1, e0: float32): Mm[w32, float32] = 
-  ## Set packed single-precision floating-point elements with specified values (e7 is highest)
-  Mm[w32, float32](mm256_set_ps(e7, e6, e5, e4, e3, e2, e1, e0))
+template set*(e7, e6, e5, e4, e3, e2, e1, e0: float32): Mm[8, float32] = 
+  ## Set 8 single-precision floating-point elements with specified values (e7 is highest)
+  Mm[8, float32](mm256_set_ps(e7, e6, e5, e4, e3, e2, e1, e0))
 
-template set*(e3, e2, e1, e0: float64): Mm[w64, float64] = 
-  ## Set packed double-precision floating-point elements with specified values (e3 is highest)
-  Mm[w64, float64](mm256_set_pd(e3, e2, e1, e0))
+template set*(e3, e2, e1, e0: float64): Mm[4, float64] = 
+  ## Set 4 double-precision floating-point elements with specified values (e3 is highest)
+  Mm[4, float64](mm256_set_pd(e3, e2, e1, e0))
 
-template set*(e31, e30, e29, e28, e27, e26, e25, e24, e23, e22, e21, e20, e19, e18, e17, e16, e15, e14, e13, e12, e11, e10, e9, e8, e7, e6, e5, e4, e3, e2, e1, e0: int8): Mm[w8, int8] = 
-  ## Set packed 8-bit integer elements with specified values (e31 is highest)
-  Mm[w8, int8](mm256_set_epi8(e31, e30, e29, e28, e27, e26, e25, e24, e23, e22, e21, e20, e19, e18, e17, e16, e15, e14, e13, e12, e11, e10, e9, e8, e7, e6, e5, e4, e3, e2, e1, e0))
+template set*(e31, e30, e29, e28, e27, e26, e25, e24, e23, e22, e21, e20, e19, e18, e17, e16, e15, e14, e13, e12, e11, e10, e9, e8, e7, e6, e5, e4, e3, e2, e1, e0: int8): Mm[32, int8] = 
+  ## Set 32 8-bit integer elements with specified values (e31 is highest)
+  Mm[32, int8](mm256_set_epi8(e31, e30, e29, e28, e27, e26, e25, e24, e23, e22, e21, e20, e19, e18, e17, e16, e15, e14, e13, e12, e11, e10, e9, e8, e7, e6, e5, e4, e3, e2, e1, e0))
 
-template set*(e15, e14, e13, e12, e11, e10, e9, e8, e7, e6, e5, e4, e3, e2, e1, e0: int16): Mm[w16, int16] = 
-  ## Set packed 16-bit integer elements with specified values (e15 is highest)
-  Mm[w16, int16](mm256_set_epi16(e15, e14, e13, e12, e11, e10, e9, e8, e7, e6, e5, e4, e3, e2, e1, e0))
+template set*(e15, e14, e13, e12, e11, e10, e9, e8, e7, e6, e5, e4, e3, e2, e1, e0: int16): Mm[16, int16] = 
+  ## Set 16 16-bit integer elements with specified values (e15 is highest)
+  Mm[16, int16](mm256_set_epi16(e15, e14, e13, e12, e11, e10, e9, e8, e7, e6, e5, e4, e3, e2, e1, e0))
 
-template set*(e7, e6, e5, e4, e3, e2, e1, e0: int32): Mm[w32, int32] = 
-  ## Set packed 32-bit integer elements with specified values (e7 is highest)
-  Mm[w32, int32](mm256_set_epi32(e7, e6, e5, e4, e3, e2, e1, e0))
+template set*(e7, e6, e5, e4, e3, e2, e1, e0: int32): Mm[8, int32] = 
+  ## Set 8 32-bit integer elements with specified values (e7 is highest)
+  Mm[8, int32](mm256_set_epi32(e7, e6, e5, e4, e3, e2, e1, e0))
 
-template set*(e3, e2, e1, e0: int64): Mm[w64, int64] = 
-  ## Set packed 64-bit integer elements with specified values (e3 is highest)
-  Mm[w64, int64](mm256_set_epi64x(e3, e2, e1, e0))
+template set*(e3, e2, e1, e0: int64): Mm[4, int64] = 
+  ## Set 4 64-bit integer elements with specified values (e3 is highest)
+  Mm[4, int64](mm256_set_epi64x(e3, e2, e1, e0))
 
 # Unsigned integer versions (use same underlying intrinsics with casting)
-template set*(e31, e30, e29, e28, e27, e26, e25, e24, e23, e22, e21, e20, e19, e18, e17, e16, e15, e14, e13, e12, e11, e10, e9, e8, e7, e6, e5, e4, e3, e2, e1, e0: uint8): Mm[w8, uint8] = 
-  ## Set packed 8-bit unsigned integer elements with specified values (e31 is highest)
-  Mm[w8, uint8](mm256_set_epi8(cast[int8](e31), cast[int8](e30), cast[int8](e29), cast[int8](e28), cast[int8](e27), cast[int8](e26), cast[int8](e25), cast[int8](e24), cast[int8](e23), cast[int8](e22), cast[int8](e21), cast[int8](e20), cast[int8](e19), cast[int8](e18), cast[int8](e17), cast[int8](e16), cast[int8](e15), cast[int8](e14), cast[int8](e13), cast[int8](e12), cast[int8](e11), cast[int8](e10), cast[int8](e9), cast[int8](e8), cast[int8](e7), cast[int8](e6), cast[int8](e5), cast[int8](e4), cast[int8](e3), cast[int8](e2), cast[int8](e1), cast[int8](e0)))
+template set*(e31, e30, e29, e28, e27, e26, e25, e24, e23, e22, e21, e20, e19, e18, e17, e16, e15, e14, e13, e12, e11, e10, e9, e8, e7, e6, e5, e4, e3, e2, e1, e0: uint8): Mm[32, uint8] = 
+  ## Set 32 8-bit unsigned integer elements with specified values (e31 is highest)
+  Mm[32, uint8](mm256_set_epi8(cast[int8](e31), cast[int8](e30), cast[int8](e29), cast[int8](e28), cast[int8](e27), cast[int8](e26), cast[int8](e25), cast[int8](e24), cast[int8](e23), cast[int8](e22), cast[int8](e21), cast[int8](e20), cast[int8](e19), cast[int8](e18), cast[int8](e17), cast[int8](e16), cast[int8](e15), cast[int8](e14), cast[int8](e13), cast[int8](e12), cast[int8](e11), cast[int8](e10), cast[int8](e9), cast[int8](e8), cast[int8](e7), cast[int8](e6), cast[int8](e5), cast[int8](e4), cast[int8](e3), cast[int8](e2), cast[int8](e1), cast[int8](e0)))
 
-template set*(e15, e14, e13, e12, e11, e10, e9, e8, e7, e6, e5, e4, e3, e2, e1, e0: uint16): Mm[w16, uint16] = 
-  ## Set packed 16-bit unsigned integer elements with specified values (e15 is highest)
-  Mm[w16, uint16](mm256_set_epi16(cast[int16](e15), cast[int16](e14), cast[int16](e13), cast[int16](e12), cast[int16](e11), cast[int16](e10), cast[int16](e9), cast[int16](e8), cast[int16](e7), cast[int16](e6), cast[int16](e5), cast[int16](e4), cast[int16](e3), cast[int16](e2), cast[int16](e1), cast[int16](e0)))
+template set*(e15, e14, e13, e12, e11, e10, e9, e8, e7, e6, e5, e4, e3, e2, e1, e0: uint16): Mm[16, uint16] = 
+  ## Set 16 16-bit unsigned integer elements with specified values (e15 is highest)
+  Mm[16, uint16](mm256_set_epi16(cast[int16](e15), cast[int16](e14), cast[int16](e13), cast[int16](e12), cast[int16](e11), cast[int16](e10), cast[int16](e9), cast[int16](e8), cast[int16](e7), cast[int16](e6), cast[int16](e5), cast[int16](e4), cast[int16](e3), cast[int16](e2), cast[int16](e1), cast[int16](e0)))
 
-template set*(e7, e6, e5, e4, e3, e2, e1, e0: uint32): Mm[w32, uint32] = 
-  ## Set packed 32-bit unsigned integer elements with specified values (e7 is highest)
-  Mm[w32, uint32](mm256_set_epi32(cast[int32](e7), cast[int32](e6), cast[int32](e5), cast[int32](e4), cast[int32](e3), cast[int32](e2), cast[int32](e1), cast[int32](e0)))
+template set*(e7, e6, e5, e4, e3, e2, e1, e0: uint32): Mm[8, uint32] = 
+  ## Set 8 32-bit unsigned integer elements with specified values (e7 is highest)
+  Mm[8, uint32](mm256_set_epi32(cast[int32](e7), cast[int32](e6), cast[int32](e5), cast[int32](e4), cast[int32](e3), cast[int32](e2), cast[int32](e1), cast[int32](e0)))
 
-template set*(e3, e2, e1, e0: uint64): Mm[w64, uint64] = 
-  ## Set packed 64-bit unsigned integer elements with specified values (e3 is highest)
-  Mm[w64, uint64](mm256_set_epi64x(cast[int64](e3), cast[int64](e2), cast[int64](e1), cast[int64](e0)))
+template set*(e3, e2, e1, e0: uint64): Mm[4, uint64] = 
+  ## Set 4 64-bit unsigned integer elements with specified values (e3 is highest)
+  Mm[4, uint64](mm256_set_epi64x(cast[int64](e3), cast[int64](e2), cast[int64](e1), cast[int64](e0)))
 
 template zero*[N, T](t: typedesc[Mm[N, T]]): Mm[N, T] = 
   ## Return vector with all elements set to zero
@@ -457,25 +456,25 @@ template sum*[N, T](a: Mm[N, T]): T =
     {.error: "hsum() not implemented for this integer type".}
 
 # --- Nim-style aliases ---
-template toMm*[T](p: array[32, T]): Mm[w8, T] = load(p)
-template toMm*[T](p: array[16, T]): Mm[w16, T] = load(p)
-template toMm*[T](p: array[8, T]): Mm[w32, T] = load(p)
-template toMm*[T](p: array[4, T]): Mm[w64, T] = load(p)
-template toArray*[T](m: Mm[w8, T]): array[32, T] = store(m)
-template toArray*[T](m: Mm[w16, T]): array[16, T] = store(m)
-template toArray*[T](m: Mm[w32, T]): array[8, T] = store(m)
-template toArray*[T](m: Mm[w64, T]): array[4, T] = store(m)
+template toMm*[T](p: array[32, T]): Mm[32, T] = load(p)
+template toMm*[T](p: array[16, T]): Mm[16, T] = load(p)
+template toMm*[T](p: array[8, T]): Mm[8, T] = load(p)
+template toMm*[T](p: array[4, T]): Mm[4, T] = load(p)
+template toArray*[T](m: Mm[32, T]): array[32, T] = store(m)
+template toArray*[T](m: Mm[16, T]): array[16, T] = store(m)
+template toArray*[T](m: Mm[8, T]): array[8, T] = store(m)
+template toArray*[T](m: Mm[4, T]): array[4, T] = store(m)
 
-template initMm*(e7, e6, e5, e4, e3, e2, e1, e0: float32): Mm[w32, float32] = set(e7, e6, e5, e4, e3, e2, e1, e0)
-template initMm*(e3, e2, e1, e0: float64): Mm[w64, float64] = set(e3, e2, e1, e0)
-template initMm*(e31, e30, e29, e28, e27, e26, e25, e24, e23, e22, e21, e20, e19, e18, e17, e16, e15, e14, e13, e12, e11, e10, e9, e8, e7, e6, e5, e4, e3, e2, e1, e0: int8): Mm[w8, int8] = set(e31, e30, e29, e28, e27, e26, e25, e24, e23, e22, e21, e20, e19, e18, e17, e16, e15, e14, e13, e12, e11, e10, e9, e8, e7, e6, e5, e4, e3, e2, e1, e0)
-template initMm*(e15, e14, e13, e12, e11, e10, e9, e8, e7, e6, e5, e4, e3, e2, e1, e0: int16): Mm[w16, int16] = set(e15, e14, e13, e12, e11, e10, e9, e8, e7, e6, e5, e4, e3, e2, e1, e0)
-template initMm*(e7, e6, e5, e4, e3, e2, e1, e0: int32): Mm[w32, int32] = set(e7, e6, e5, e4, e3, e2, e1, e0)
-template initMm*(e3, e2, e1, e0: int64): Mm[w64, int64] = set(e3, e2, e1, e0)
-template initMm*(e31, e30, e29, e28, e27, e26, e25, e24, e23, e22, e21, e20, e19, e18, e17, e16, e15, e14, e13, e12, e11, e10, e9, e8, e7, e6, e5, e4, e3, e2, e1, e0: uint8): Mm[w8, uint8] = set(e31, e30, e29, e28, e27, e26, e25, e24, e23, e22, e21, e20, e19, e18, e17, e16, e15, e14, e13, e12, e11, e10, e9, e8, e7, e6, e5, e4, e3, e2, e1, e0)
-template initMm*(e15, e14, e13, e12, e11, e10, e9, e8, e7, e6, e5, e4, e3, e2, e1, e0: uint16): Mm[w16, uint16] = set(e15, e14, e13, e12, e11, e10, e9, e8, e7, e6, e5, e4, e3, e2, e1, e0)
-template initMm*(e7, e6, e5, e4, e3, e2, e1, e0: uint32): Mm[w32, uint32] = set(e7, e6, e5, e4, e3, e2, e1, e0)
-template initMm*(e3, e2, e1, e0: uint64): Mm[w64, uint64] = set(e3, e2, e1, e0)
+template initMm*(e7, e6, e5, e4, e3, e2, e1, e0: float32): Mm[8, float32] = set(e7, e6, e5, e4, e3, e2, e1, e0)
+template initMm*(e3, e2, e1, e0: float64): Mm[4, float64] = set(e3, e2, e1, e0)
+template initMm*(e31, e30, e29, e28, e27, e26, e25, e24, e23, e22, e21, e20, e19, e18, e17, e16, e15, e14, e13, e12, e11, e10, e9, e8, e7, e6, e5, e4, e3, e2, e1, e0: int8): Mm[32, int8] = set(e31, e30, e29, e28, e27, e26, e25, e24, e23, e22, e21, e20, e19, e18, e17, e16, e15, e14, e13, e12, e11, e10, e9, e8, e7, e6, e5, e4, e3, e2, e1, e0)
+template initMm*(e15, e14, e13, e12, e11, e10, e9, e8, e7, e6, e5, e4, e3, e2, e1, e0: int16): Mm[16, int16] = set(e15, e14, e13, e12, e11, e10, e9, e8, e7, e6, e5, e4, e3, e2, e1, e0)
+template initMm*(e7, e6, e5, e4, e3, e2, e1, e0: int32): Mm[8, int32] = set(e7, e6, e5, e4, e3, e2, e1, e0)
+template initMm*(e3, e2, e1, e0: int64): Mm[4, int64] = set(e3, e2, e1, e0)
+template initMm*(e31, e30, e29, e28, e27, e26, e25, e24, e23, e22, e21, e20, e19, e18, e17, e16, e15, e14, e13, e12, e11, e10, e9, e8, e7, e6, e5, e4, e3, e2, e1, e0: uint8): Mm[32, uint8] = set(e31, e30, e29, e28, e27, e26, e25, e24, e23, e22, e21, e20, e19, e18, e17, e16, e15, e14, e13, e12, e11, e10, e9, e8, e7, e6, e5, e4, e3, e2, e1, e0)
+template initMm*(e15, e14, e13, e12, e11, e10, e9, e8, e7, e6, e5, e4, e3, e2, e1, e0: uint16): Mm[16, uint16] = set(e15, e14, e13, e12, e11, e10, e9, e8, e7, e6, e5, e4, e3, e2, e1, e0)
+template initMm*(e7, e6, e5, e4, e3, e2, e1, e0: uint32): Mm[8, uint32] = set(e7, e6, e5, e4, e3, e2, e1, e0)
+template initMm*(e3, e2, e1, e0: uint64): Mm[4, uint64] = set(e3, e2, e1, e0)
 template initMm*[N, T](t: typedesc[Mm[N, T]]): Mm[N, T] = zero(t)
 
 template mask*[N, T](a: Mm[N, T]): int32 = 
@@ -538,25 +537,25 @@ template blendv*[N, T](a, b, mask: Mm[N, T]): Mm[N, T] =
     {.error: "Variable blend not supported for this type"}
 
 # --- Gather Operations ---
-template gather*[T](p: openArray[T], vindex: Mm[w32, int32], scale: int32): Mm[w32, T] = 
+template gather*[T](p: openArray[T], vindex: Mm[8, int32], scale: int32): Mm[8, T] = 
   ## Gather elements from memory using 32-bit indices
   when T is int32:
-    Mm[w32, T](mm256_i32gather_epi32(cast[pointer](unsafeAddr p[0]), M256i(vindex), scale))
+    Mm[8, T](mm256_i32gather_epi32(cast[pointer](unsafeAddr p[0]), M256i(vindex), scale))
   elif T is uint32:
-    Mm[w32, T](mm256_i32gather_epi32(cast[pointer](unsafeAddr p[0]), M256i(vindex), scale))
+    Mm[8, T](mm256_i32gather_epi32(cast[pointer](unsafeAddr p[0]), M256i(vindex), scale))
   elif T is float32:
-    Mm[w32, T](mm256_i32gather_ps(cast[pointer](unsafeAddr p[0]), M256i(vindex), scale))
+    Mm[8, T](mm256_i32gather_ps(cast[pointer](unsafeAddr p[0]), M256i(vindex), scale))
   else:
     {.error: "Gather not supported for this type"}
 
-template gather*[T](p: openArray[T], vindex: Mm[w64, int64], scale: int32): Mm[w64, T] = 
+template gather*[T](p: openArray[T], vindex: Mm[4, int64], scale: int32): Mm[4, T] = 
   ## Gather elements from memory using 64-bit indices
   when T is int64:
-    Mm[w64, T](mm256_i64gather_epi64(cast[pointer](unsafeAddr p[0]), M256i(vindex), scale))
+    Mm[4, T](mm256_i64gather_epi64(cast[pointer](unsafeAddr p[0]), M256i(vindex), scale))
   elif T is uint64:
-    Mm[w64, T](mm256_i64gather_epi64(cast[pointer](unsafeAddr p[0]), M256i(vindex), scale))
+    Mm[4, T](mm256_i64gather_epi64(cast[pointer](unsafeAddr p[0]), M256i(vindex), scale))
   elif T is float64:
-    Mm[w64, T](mm256_i64gather_pd(cast[pointer](unsafeAddr p[0]), M256i(vindex), scale))
+    Mm[4, T](mm256_i64gather_pd(cast[pointer](unsafeAddr p[0]), M256i(vindex), scale))
   else:
     {.error: "Gather not supported for this type"}
 
@@ -760,10 +759,10 @@ template maskStore*[N, T](p: var openArray[T], mask: Mm[N, T], a: Mm[N, T]) =
     {.error: "Mask store only supported for floating-point types"}
 
 # --- Stream Operations ---
-template streamLoad*[T](p: array[8, T]): Mm[w32, T] = 
+template streamLoad*[T](p: array[8, T]): Mm[8, T] = 
   ## Load data from memory using non-temporal memory hint
   when T is int32 | uint32:
-    Mm[w32, T](mm256_stream_load_si256(cast[pointer](unsafeAddr p[0])))
+    Mm[8, T](mm256_stream_load_si256(cast[pointer](unsafeAddr p[0])))
   else:
     {.error: "Stream load only supported for 32-bit integers"}
 

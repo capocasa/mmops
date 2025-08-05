@@ -55,17 +55,16 @@
   <details open>
     <summary><a class="reference reference-toplevel" href="#7" id="57">Types</a></summary>
     <ul class="simple simple-toc-section">
-      <li><a class="reference" href="#Mm" title="Mm[N; T] = distinct (when T is float32:
-  M256
-elif T is float64:
-  M256d
+      <li><a class="reference" href="#Mm" title="Mm[N; T] = distinct (when contains([4, 8, 16, 32], N):
+  when T is float32:
+    M256
+  elif T is float64:
+    M256d
+  else:
+    M256i
 else:
-  M256i)">Mm</a></li>
-<li><a class="reference" href="#Width" title="Width = enum
-  w64 = 4,                  ## 4 × 64-bit elements (256 bits total)
-  w32 = 8,                  ## 8 × 32-bit elements (256 bits total)
-  w16 = 16,                 ## 16 × 16-bit elements (256 bits total)
-  w8 = 32                    ## 32 × 8-bit elements (256 bits total)">Width</a></li>
+  {.error: &quot;Width must be 4, 8, 16, or 32&quot;.})">Mm</a></li>
+<li><a class="reference" href="#Width" title="Width = static[int]">Width</a></li>
 
     </ul>
   </details>
@@ -95,10 +94,10 @@ else:
     <summary><a class="reference reference-toplevel" href="#12" id="62">Procs</a></summary>
     <ul class="simple simple-toc-section">
       <ul class="simple nested-toc-section">load
-  <li><a class="reference" href="#load%2Carray%5B%2CT%5D_4" title="load[T](p: array[4, T]): Mm[w64, T]">load[T](p: array[4, T]): Mm[w64, T]</a></li>
-<li><a class="reference" href="#load%2Carray%5B%2CT%5D_3" title="load[T](p: array[8, T]): Mm[w32, T]">load[T](p: array[8, T]): Mm[w32, T]</a></li>
-<li><a class="reference" href="#load%2Carray%5B%2CT%5D_2" title="load[T](p: array[16, T]): Mm[w16, T]">load[T](p: array[16, T]): Mm[w16, T]</a></li>
-<li><a class="reference" href="#load%2Carray%5B%2CT%5D" title="load[T](p: array[32, T]): Mm[w8, T]">load[T](p: array[32, T]): Mm[w8, T]</a></li>
+  <li><a class="reference" href="#load%2Carray%5B%2CT%5D_4" title="load[T](p: array[4, T]): Mm[4, T]">load[T](p: array[4, T]): Mm[4, T]</a></li>
+<li><a class="reference" href="#load%2Carray%5B%2CT%5D_3" title="load[T](p: array[8, T]): Mm[8, T]">load[T](p: array[8, T]): Mm[8, T]</a></li>
+<li><a class="reference" href="#load%2Carray%5B%2CT%5D_2" title="load[T](p: array[16, T]): Mm[16, T]">load[T](p: array[16, T]): Mm[16, T]</a></li>
+<li><a class="reference" href="#load%2Carray%5B%2CT%5D" title="load[T](p: array[32, T]): Mm[32, T]">load[T](p: array[32, T]): Mm[32, T]</a></li>
 
 </ul>
 
@@ -210,8 +209,8 @@ else:
 
 </ul>
 <ul class="simple nested-toc-section">gather
-  <li><a class="reference" href="#gather.t%2CopenArray%5BT%5D%2CMm%5BWidth%2Cint32%5D%2Cint32" title="gather[T](p: openArray[T]; vindex: Mm[w32, int32]; scale: int32): Mm[w32, T]">gather[T](p: openArray[T]; vindex: Mm[w32, int32]; scale: int32): Mm[w32, T]</a></li>
-<li><a class="reference" href="#gather.t%2CopenArray%5BT%5D%2CMm%5BWidth%2Cint64%5D%2Cint32" title="gather[T](p: openArray[T]; vindex: Mm[w64, int64]; scale: int32): Mm[w64, T]">gather[T](p: openArray[T]; vindex: Mm[w64, int64]; scale: int32): Mm[w64, T]</a></li>
+  <li><a class="reference" href="#gather.t%2CopenArray%5BT%5D%2CMm%5B%2Cint64%5D%2Cint32" title="gather[T](p: openArray[T]; vindex: Mm[4, int64]; scale: int32): Mm[4, T]">gather[T](p: openArray[T]; vindex: Mm[4, int64]; scale: int32): Mm[4, T]</a></li>
+<li><a class="reference" href="#gather.t%2CopenArray%5BT%5D%2CMm%5B%2Cint32%5D%2Cint32" title="gather[T](p: openArray[T]; vindex: Mm[8, int32]; scale: int32): Mm[8, T]">gather[T](p: openArray[T]; vindex: Mm[8, int32]; scale: int32): Mm[8, T]</a></li>
 
 </ul>
 <ul class="simple nested-toc-section">hadd
@@ -223,28 +222,28 @@ else:
 
 </ul>
 <ul class="simple nested-toc-section">initMm
-  <li><a class="reference" href="#initMm.t%2Cfloat64%2Cfloat64%2Cfloat64%2Cfloat64" title="initMm(e3, e2, e1, e0: float64): Mm[w64, float64]">initMm(e3, e2, e1, e0: float64): Mm[w64, float64]</a></li>
-<li><a class="reference" href="#initMm.t%2Cint64%2Cint64%2Cint64%2Cint64" title="initMm(e3, e2, e1, e0: int64): Mm[w64, int64]">initMm(e3, e2, e1, e0: int64): Mm[w64, int64]</a></li>
-<li><a class="reference" href="#initMm.t%2Cuint64%2Cuint64%2Cuint64%2Cuint64" title="initMm(e3, e2, e1, e0: uint64): Mm[w64, uint64]">initMm(e3, e2, e1, e0: uint64): Mm[w64, uint64]</a></li>
-<li><a class="reference" href="#initMm.t%2Cfloat32%2Cfloat32%2Cfloat32%2Cfloat32%2Cfloat32%2Cfloat32%2Cfloat32%2Cfloat32" title="initMm(e7, e6, e5, e4, e3, e2, e1, e0: float32): Mm[w32, float32]">initMm(e7, e6, e5, e4, e3, e2, e1, e0: float32): Mm[w32, float32]</a></li>
-<li><a class="reference" href="#initMm.t%2Cint32%2Cint32%2Cint32%2Cint32%2Cint32%2Cint32%2Cint32%2Cint32" title="initMm(e7, e6, e5, e4, e3, e2, e1, e0: int32): Mm[w32, int32]">initMm(e7, e6, e5, e4, e3, e2, e1, e0: int32): Mm[w32, int32]</a></li>
-<li><a class="reference" href="#initMm.t%2Cuint32%2Cuint32%2Cuint32%2Cuint32%2Cuint32%2Cuint32%2Cuint32%2Cuint32" title="initMm(e7, e6, e5, e4, e3, e2, e1, e0: uint32): Mm[w32, uint32]">initMm(e7, e6, e5, e4, e3, e2, e1, e0: uint32): Mm[w32, uint32]</a></li>
+  <li><a class="reference" href="#initMm.t%2Cfloat64%2Cfloat64%2Cfloat64%2Cfloat64" title="initMm(e3, e2, e1, e0: float64): Mm[4, float64]">initMm(e3, e2, e1, e0: float64): Mm[4, float64]</a></li>
+<li><a class="reference" href="#initMm.t%2Cint64%2Cint64%2Cint64%2Cint64" title="initMm(e3, e2, e1, e0: int64): Mm[4, int64]">initMm(e3, e2, e1, e0: int64): Mm[4, int64]</a></li>
+<li><a class="reference" href="#initMm.t%2Cuint64%2Cuint64%2Cuint64%2Cuint64" title="initMm(e3, e2, e1, e0: uint64): Mm[4, uint64]">initMm(e3, e2, e1, e0: uint64): Mm[4, uint64]</a></li>
+<li><a class="reference" href="#initMm.t%2Cfloat32%2Cfloat32%2Cfloat32%2Cfloat32%2Cfloat32%2Cfloat32%2Cfloat32%2Cfloat32" title="initMm(e7, e6, e5, e4, e3, e2, e1, e0: float32): Mm[8, float32]">initMm(e7, e6, e5, e4, e3, e2, e1, e0: float32): Mm[8, float32]</a></li>
+<li><a class="reference" href="#initMm.t%2Cint32%2Cint32%2Cint32%2Cint32%2Cint32%2Cint32%2Cint32%2Cint32" title="initMm(e7, e6, e5, e4, e3, e2, e1, e0: int32): Mm[8, int32]">initMm(e7, e6, e5, e4, e3, e2, e1, e0: int32): Mm[8, int32]</a></li>
+<li><a class="reference" href="#initMm.t%2Cuint32%2Cuint32%2Cuint32%2Cuint32%2Cuint32%2Cuint32%2Cuint32%2Cuint32" title="initMm(e7, e6, e5, e4, e3, e2, e1, e0: uint32): Mm[8, uint32]">initMm(e7, e6, e5, e4, e3, e2, e1, e0: uint32): Mm[8, uint32]</a></li>
 <li><a class="reference" href="#initMm.t%2Cint16%2Cint16%2Cint16%2Cint16%2Cint16%2Cint16%2Cint16%2Cint16%2Cint16%2Cint16%2Cint16%2Cint16%2Cint16%2Cint16%2Cint16%2Cint16" title="initMm(e15, e14, e13, e12, e11, e10, e9, e8, e7, e6, e5, e4, e3, e2, e1, e0: int16): Mm[
-    w16, int16]">initMm(e15, e14, e13, e12, e11, e10, e9, e8, e7, e6, e5, e4, e3, e2, e1, e0: int16): Mm[
-    w16, int16]</a></li>
+    16, int16]">initMm(e15, e14, e13, e12, e11, e10, e9, e8, e7, e6, e5, e4, e3, e2, e1, e0: int16): Mm[
+    16, int16]</a></li>
 <li><a class="reference" href="#initMm.t%2Cuint16%2Cuint16%2Cuint16%2Cuint16%2Cuint16%2Cuint16%2Cuint16%2Cuint16%2Cuint16%2Cuint16%2Cuint16%2Cuint16%2Cuint16%2Cuint16%2Cuint16%2Cuint16" title="initMm(e15, e14, e13, e12, e11, e10, e9, e8, e7, e6, e5, e4, e3, e2, e1, e0: uint16): Mm[
-    w16, uint16]">initMm(e15, e14, e13, e12, e11, e10, e9, e8, e7, e6, e5, e4, e3, e2, e1, e0: uint16): Mm[
-    w16, uint16]</a></li>
+    16, uint16]">initMm(e15, e14, e13, e12, e11, e10, e9, e8, e7, e6, e5, e4, e3, e2, e1, e0: uint16): Mm[
+    16, uint16]</a></li>
 <li><a class="reference" href="#initMm.t%2Cint8%2Cint8%2Cint8%2Cint8%2Cint8%2Cint8%2Cint8%2Cint8%2Cint8%2Cint8%2Cint8%2Cint8%2Cint8%2Cint8%2Cint8%2Cint8%2Cint8%2Cint8%2Cint8%2Cint8%2Cint8%2Cint8%2Cint8%2Cint8%2Cint8%2Cint8%2Cint8%2Cint8%2Cint8%2Cint8%2Cint8%2Cint8" title="initMm(e31, e30, e29, e28, e27, e26, e25, e24, e23, e22, e21, e20, e19, e18,
        e17, e16, e15, e14, e13, e12, e11, e10, e9, e8, e7, e6, e5, e4, e3, e2,
-       e1, e0: int8): Mm[w8, int8]">initMm(e31, e30, e29, e28, e27, e26, e25, e24, e23, e22, e21, e20, e19, e18,
+       e1, e0: int8): Mm[32, int8]">initMm(e31, e30, e29, e28, e27, e26, e25, e24, e23, e22, e21, e20, e19, e18,
        e17, e16, e15, e14, e13, e12, e11, e10, e9, e8, e7, e6, e5, e4, e3, e2,
-       e1, e0: int8): Mm[w8, int8]</a></li>
+       e1, e0: int8): Mm[32, int8]</a></li>
 <li><a class="reference" href="#initMm.t%2Cuint8%2Cuint8%2Cuint8%2Cuint8%2Cuint8%2Cuint8%2Cuint8%2Cuint8%2Cuint8%2Cuint8%2Cuint8%2Cuint8%2Cuint8%2Cuint8%2Cuint8%2Cuint8%2Cuint8%2Cuint8%2Cuint8%2Cuint8%2Cuint8%2Cuint8%2Cuint8%2Cuint8%2Cuint8%2Cuint8%2Cuint8%2Cuint8%2Cuint8%2Cuint8%2Cuint8%2Cuint8" title="initMm(e31, e30, e29, e28, e27, e26, e25, e24, e23, e22, e21, e20, e19, e18,
        e17, e16, e15, e14, e13, e12, e11, e10, e9, e8, e7, e6, e5, e4, e3, e2,
-       e1, e0: uint8): Mm[w8, uint8]">initMm(e31, e30, e29, e28, e27, e26, e25, e24, e23, e22, e21, e20, e19, e18,
+       e1, e0: uint8): Mm[32, uint8]">initMm(e31, e30, e29, e28, e27, e26, e25, e24, e23, e22, e21, e20, e19, e18,
        e17, e16, e15, e14, e13, e12, e11, e10, e9, e8, e7, e6, e5, e4, e3, e2,
-       e1, e0: uint8): Mm[w8, uint8]</a></li>
+       e1, e0: uint8): Mm[32, uint8]</a></li>
 <li><a class="reference" href="#initMm.t%2Ctypedesc%5BMm%5BN%2CT%5D%5D" title="initMm[N, T](t: typedesc[Mm[N, T]]): Mm[N, T]">initMm[N, T](t: typedesc[Mm[N, T]]): Mm[N, T]</a></li>
 
 </ul>
@@ -329,28 +328,28 @@ else:
 
 </ul>
 <ul class="simple nested-toc-section">set
-  <li><a class="reference" href="#set.t%2Cfloat64%2Cfloat64%2Cfloat64%2Cfloat64" title="set(e3, e2, e1, e0: float64): Mm[w64, float64]">set(e3, e2, e1, e0: float64): Mm[w64, float64]</a></li>
-<li><a class="reference" href="#set.t%2Cint64%2Cint64%2Cint64%2Cint64" title="set(e3, e2, e1, e0: int64): Mm[w64, int64]">set(e3, e2, e1, e0: int64): Mm[w64, int64]</a></li>
-<li><a class="reference" href="#set.t%2Cuint64%2Cuint64%2Cuint64%2Cuint64" title="set(e3, e2, e1, e0: uint64): Mm[w64, uint64]">set(e3, e2, e1, e0: uint64): Mm[w64, uint64]</a></li>
-<li><a class="reference" href="#set.t%2Cfloat32%2Cfloat32%2Cfloat32%2Cfloat32%2Cfloat32%2Cfloat32%2Cfloat32%2Cfloat32" title="set(e7, e6, e5, e4, e3, e2, e1, e0: float32): Mm[w32, float32]">set(e7, e6, e5, e4, e3, e2, e1, e0: float32): Mm[w32, float32]</a></li>
-<li><a class="reference" href="#set.t%2Cint32%2Cint32%2Cint32%2Cint32%2Cint32%2Cint32%2Cint32%2Cint32" title="set(e7, e6, e5, e4, e3, e2, e1, e0: int32): Mm[w32, int32]">set(e7, e6, e5, e4, e3, e2, e1, e0: int32): Mm[w32, int32]</a></li>
-<li><a class="reference" href="#set.t%2Cuint32%2Cuint32%2Cuint32%2Cuint32%2Cuint32%2Cuint32%2Cuint32%2Cuint32" title="set(e7, e6, e5, e4, e3, e2, e1, e0: uint32): Mm[w32, uint32]">set(e7, e6, e5, e4, e3, e2, e1, e0: uint32): Mm[w32, uint32]</a></li>
+  <li><a class="reference" href="#set.t%2Cfloat64%2Cfloat64%2Cfloat64%2Cfloat64" title="set(e3, e2, e1, e0: float64): Mm[4, float64]">set(e3, e2, e1, e0: float64): Mm[4, float64]</a></li>
+<li><a class="reference" href="#set.t%2Cint64%2Cint64%2Cint64%2Cint64" title="set(e3, e2, e1, e0: int64): Mm[4, int64]">set(e3, e2, e1, e0: int64): Mm[4, int64]</a></li>
+<li><a class="reference" href="#set.t%2Cuint64%2Cuint64%2Cuint64%2Cuint64" title="set(e3, e2, e1, e0: uint64): Mm[4, uint64]">set(e3, e2, e1, e0: uint64): Mm[4, uint64]</a></li>
+<li><a class="reference" href="#set.t%2Cfloat32%2Cfloat32%2Cfloat32%2Cfloat32%2Cfloat32%2Cfloat32%2Cfloat32%2Cfloat32" title="set(e7, e6, e5, e4, e3, e2, e1, e0: float32): Mm[8, float32]">set(e7, e6, e5, e4, e3, e2, e1, e0: float32): Mm[8, float32]</a></li>
+<li><a class="reference" href="#set.t%2Cint32%2Cint32%2Cint32%2Cint32%2Cint32%2Cint32%2Cint32%2Cint32" title="set(e7, e6, e5, e4, e3, e2, e1, e0: int32): Mm[8, int32]">set(e7, e6, e5, e4, e3, e2, e1, e0: int32): Mm[8, int32]</a></li>
+<li><a class="reference" href="#set.t%2Cuint32%2Cuint32%2Cuint32%2Cuint32%2Cuint32%2Cuint32%2Cuint32%2Cuint32" title="set(e7, e6, e5, e4, e3, e2, e1, e0: uint32): Mm[8, uint32]">set(e7, e6, e5, e4, e3, e2, e1, e0: uint32): Mm[8, uint32]</a></li>
 <li><a class="reference" href="#set.t%2Cint16%2Cint16%2Cint16%2Cint16%2Cint16%2Cint16%2Cint16%2Cint16%2Cint16%2Cint16%2Cint16%2Cint16%2Cint16%2Cint16%2Cint16%2Cint16" title="set(e15, e14, e13, e12, e11, e10, e9, e8, e7, e6, e5, e4, e3, e2, e1, e0: int16): Mm[
-    w16, int16]">set(e15, e14, e13, e12, e11, e10, e9, e8, e7, e6, e5, e4, e3, e2, e1, e0: int16): Mm[
-    w16, int16]</a></li>
+    16, int16]">set(e15, e14, e13, e12, e11, e10, e9, e8, e7, e6, e5, e4, e3, e2, e1, e0: int16): Mm[
+    16, int16]</a></li>
 <li><a class="reference" href="#set.t%2Cuint16%2Cuint16%2Cuint16%2Cuint16%2Cuint16%2Cuint16%2Cuint16%2Cuint16%2Cuint16%2Cuint16%2Cuint16%2Cuint16%2Cuint16%2Cuint16%2Cuint16%2Cuint16" title="set(e15, e14, e13, e12, e11, e10, e9, e8, e7, e6, e5, e4, e3, e2, e1, e0: uint16): Mm[
-    w16, uint16]">set(e15, e14, e13, e12, e11, e10, e9, e8, e7, e6, e5, e4, e3, e2, e1, e0: uint16): Mm[
-    w16, uint16]</a></li>
+    16, uint16]">set(e15, e14, e13, e12, e11, e10, e9, e8, e7, e6, e5, e4, e3, e2, e1, e0: uint16): Mm[
+    16, uint16]</a></li>
 <li><a class="reference" href="#set.t%2Cint8%2Cint8%2Cint8%2Cint8%2Cint8%2Cint8%2Cint8%2Cint8%2Cint8%2Cint8%2Cint8%2Cint8%2Cint8%2Cint8%2Cint8%2Cint8%2Cint8%2Cint8%2Cint8%2Cint8%2Cint8%2Cint8%2Cint8%2Cint8%2Cint8%2Cint8%2Cint8%2Cint8%2Cint8%2Cint8%2Cint8%2Cint8" title="set(e31, e30, e29, e28, e27, e26, e25, e24, e23, e22, e21, e20, e19, e18, e17,
     e16, e15, e14, e13, e12, e11, e10, e9, e8, e7, e6, e5, e4, e3, e2, e1, e0: int8): Mm[
-    w8, int8]">set(e31, e30, e29, e28, e27, e26, e25, e24, e23, e22, e21, e20, e19, e18, e17,
+    32, int8]">set(e31, e30, e29, e28, e27, e26, e25, e24, e23, e22, e21, e20, e19, e18, e17,
     e16, e15, e14, e13, e12, e11, e10, e9, e8, e7, e6, e5, e4, e3, e2, e1, e0: int8): Mm[
-    w8, int8]</a></li>
+    32, int8]</a></li>
 <li><a class="reference" href="#set.t%2Cuint8%2Cuint8%2Cuint8%2Cuint8%2Cuint8%2Cuint8%2Cuint8%2Cuint8%2Cuint8%2Cuint8%2Cuint8%2Cuint8%2Cuint8%2Cuint8%2Cuint8%2Cuint8%2Cuint8%2Cuint8%2Cuint8%2Cuint8%2Cuint8%2Cuint8%2Cuint8%2Cuint8%2Cuint8%2Cuint8%2Cuint8%2Cuint8%2Cuint8%2Cuint8%2Cuint8%2Cuint8" title="set(e31, e30, e29, e28, e27, e26, e25, e24, e23, e22, e21, e20, e19, e18, e17,
     e16, e15, e14, e13, e12, e11, e10, e9, e8, e7, e6, e5, e4, e3, e2, e1, e0: uint8): Mm[
-    w8, uint8]">set(e31, e30, e29, e28, e27, e26, e25, e24, e23, e22, e21, e20, e19, e18, e17,
+    32, uint8]">set(e31, e30, e29, e28, e27, e26, e25, e24, e23, e22, e21, e20, e19, e18, e17,
     e16, e15, e14, e13, e12, e11, e10, e9, e8, e7, e6, e5, e4, e3, e2, e1, e0: uint8): Mm[
-    w8, uint8]</a></li>
+    32, uint8]</a></li>
 
 </ul>
 <ul class="simple nested-toc-section">shl
@@ -387,14 +386,14 @@ else:
 
 </ul>
 <ul class="simple nested-toc-section">store
-  <li><a class="reference" href="#store.t%2CMm%5BWidth%2CT%5D_4" title="store[T](m: Mm[w8, T]): array[32, T]">store[T](m: Mm[w8, T]): array[32, T]</a></li>
-<li><a class="reference" href="#store.t%2CMm%5BWidth%2CT%5D_3" title="store[T](m: Mm[w16, T]): array[16, T]">store[T](m: Mm[w16, T]): array[16, T]</a></li>
-<li><a class="reference" href="#store.t%2CMm%5BWidth%2CT%5D" title="store[T](m: Mm[w32, T]): array[8, T]">store[T](m: Mm[w32, T]): array[8, T]</a></li>
-<li><a class="reference" href="#store.t%2CMm%5BWidth%2CT%5D_2" title="store[T](m: Mm[w64, T]): array[4, T]">store[T](m: Mm[w64, T]): array[4, T]</a></li>
+  <li><a class="reference" href="#store.t%2CMm%5B%2CT%5D_2" title="store[T](m: Mm[4, T]): array[4, T]">store[T](m: Mm[4, T]): array[4, T]</a></li>
+<li><a class="reference" href="#store.t%2CMm%5B%2CT%5D" title="store[T](m: Mm[8, T]): array[8, T]">store[T](m: Mm[8, T]): array[8, T]</a></li>
+<li><a class="reference" href="#store.t%2CMm%5B%2CT%5D_3" title="store[T](m: Mm[16, T]): array[16, T]">store[T](m: Mm[16, T]): array[16, T]</a></li>
+<li><a class="reference" href="#store.t%2CMm%5B%2CT%5D_4" title="store[T](m: Mm[32, T]): array[32, T]">store[T](m: Mm[32, T]): array[32, T]</a></li>
 
 </ul>
 <ul class="simple nested-toc-section">streamLoad
-  <li><a class="reference" href="#streamLoad.t%2Carray%5B%2CT%5D" title="streamLoad[T](p: array[8, T]): Mm[w32, T]">streamLoad[T](p: array[8, T]): Mm[w32, T]</a></li>
+  <li><a class="reference" href="#streamLoad.t%2Carray%5B%2CT%5D" title="streamLoad[T](p: array[8, T]): Mm[8, T]">streamLoad[T](p: array[8, T]): Mm[8, T]</a></li>
 
 </ul>
 <ul class="simple nested-toc-section">sum
@@ -402,17 +401,17 @@ else:
 
 </ul>
 <ul class="simple nested-toc-section">toArray
-  <li><a class="reference" href="#toArray.t%2CMm%5BWidth%2CT%5D" title="toArray[T](m: Mm[w8, T]): array[32, T]">toArray[T](m: Mm[w8, T]): array[32, T]</a></li>
-<li><a class="reference" href="#toArray.t%2CMm%5BWidth%2CT%5D_2" title="toArray[T](m: Mm[w16, T]): array[16, T]">toArray[T](m: Mm[w16, T]): array[16, T]</a></li>
-<li><a class="reference" href="#toArray.t%2CMm%5BWidth%2CT%5D_3" title="toArray[T](m: Mm[w32, T]): array[8, T]">toArray[T](m: Mm[w32, T]): array[8, T]</a></li>
-<li><a class="reference" href="#toArray.t%2CMm%5BWidth%2CT%5D_4" title="toArray[T](m: Mm[w64, T]): array[4, T]">toArray[T](m: Mm[w64, T]): array[4, T]</a></li>
+  <li><a class="reference" href="#toArray.t%2CMm%5B%2CT%5D_4" title="toArray[T](m: Mm[4, T]): array[4, T]">toArray[T](m: Mm[4, T]): array[4, T]</a></li>
+<li><a class="reference" href="#toArray.t%2CMm%5B%2CT%5D_3" title="toArray[T](m: Mm[8, T]): array[8, T]">toArray[T](m: Mm[8, T]): array[8, T]</a></li>
+<li><a class="reference" href="#toArray.t%2CMm%5B%2CT%5D_2" title="toArray[T](m: Mm[16, T]): array[16, T]">toArray[T](m: Mm[16, T]): array[16, T]</a></li>
+<li><a class="reference" href="#toArray.t%2CMm%5B%2CT%5D" title="toArray[T](m: Mm[32, T]): array[32, T]">toArray[T](m: Mm[32, T]): array[32, T]</a></li>
 
 </ul>
 <ul class="simple nested-toc-section">toMm
-  <li><a class="reference" href="#toMm.t%2Carray%5B%2CT%5D_4" title="toMm[T](p: array[4, T]): Mm[w64, T]">toMm[T](p: array[4, T]): Mm[w64, T]</a></li>
-<li><a class="reference" href="#toMm.t%2Carray%5B%2CT%5D_3" title="toMm[T](p: array[8, T]): Mm[w32, T]">toMm[T](p: array[8, T]): Mm[w32, T]</a></li>
-<li><a class="reference" href="#toMm.t%2Carray%5B%2CT%5D_2" title="toMm[T](p: array[16, T]): Mm[w16, T]">toMm[T](p: array[16, T]): Mm[w16, T]</a></li>
-<li><a class="reference" href="#toMm.t%2Carray%5B%2CT%5D" title="toMm[T](p: array[32, T]): Mm[w8, T]">toMm[T](p: array[32, T]): Mm[w8, T]</a></li>
+  <li><a class="reference" href="#toMm.t%2Carray%5B%2CT%5D_4" title="toMm[T](p: array[4, T]): Mm[4, T]">toMm[T](p: array[4, T]): Mm[4, T]</a></li>
+<li><a class="reference" href="#toMm.t%2Carray%5B%2CT%5D_3" title="toMm[T](p: array[8, T]): Mm[8, T]">toMm[T](p: array[8, T]): Mm[8, T]</a></li>
+<li><a class="reference" href="#toMm.t%2Carray%5B%2CT%5D_2" title="toMm[T](p: array[16, T]): Mm[16, T]">toMm[T](p: array[16, T]): Mm[16, T]</a></li>
+<li><a class="reference" href="#toMm.t%2Carray%5B%2CT%5D" title="toMm[T](p: array[32, T]): Mm[32, T]">toMm[T](p: array[32, T]): Mm[32, T]</a></li>
 
 </ul>
 <ul class="simple nested-toc-section">unpackHi
@@ -456,12 +455,15 @@ else:
   <h1><a class="toc-backref" href="#7">Types</a></h1>
   <dl class="item">
     <div id="Mm">
-  <dt><pre><a href="mmops.html#Mm"><span class="Identifier">Mm</span></a><span class="Other">[</span><span class="Identifier">N</span><span class="Other">;</span> <span class="Identifier">T</span><span class="Other">]</span> <span class="Other">=</span> <span class="Keyword">distinct</span> <span class="Other">(</span><span class="Keyword">when</span> <span class="Identifier">T</span> <span class="Identifier">is</span> float32<span class="Other">:</span>
-  <span class="Identifier">M256</span>
-<span class="Keyword">elif</span> <span class="Identifier">T</span> <span class="Identifier">is</span> float64<span class="Other">:</span>
-  <span class="Identifier">M256d</span>
+  <dt><pre><a href="mmops.html#Mm"><span class="Identifier">Mm</span></a><span class="Other">[</span><span class="Identifier">N</span><span class="Other">;</span> <span class="Identifier">T</span><span class="Other">]</span> <span class="Other">=</span> <span class="Keyword">distinct</span> <span class="Other">(</span><span class="Keyword">when</span> <span class="Identifier">contains</span><span class="Other">(</span><span class="Other">[</span><span class="DecNumber">4</span><span class="Other">,</span> <span class="DecNumber">8</span><span class="Other">,</span> <span class="DecNumber">16</span><span class="Other">,</span> <span class="DecNumber">32</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">N</span><span class="Other">)</span><span class="Other">:</span>
+  <span class="Keyword">when</span> <span class="Identifier">T</span> <span class="Identifier">is</span> <span class="Identifier">float32</span><span class="Other">:</span>
+    <span class="Identifier">M256</span>
+  <span class="Keyword">elif</span> <span class="Identifier">T</span> <span class="Identifier">is</span> <span class="Identifier">float64</span><span class="Other">:</span>
+    <span class="Identifier">M256d</span>
+  <span class="Keyword">else</span><span class="Other">:</span>
+    <span class="Identifier">M256i</span>
 <span class="Keyword">else</span><span class="Other">:</span>
-  <span class="Identifier">M256i</span><span class="Other">)</span></pre></dt>
+  {.<span class="Identifier">error</span><span class="Other">:</span> <span class="StringLit">&quot;Width must be 4, 8, 16, or 32&quot;</span>.}<span class="Other">)</span></pre></dt>
   <dd>
     
     
@@ -469,14 +471,10 @@ else:
   </dd>
 </div>
 <div id="Width">
-  <dt><pre><a href="mmops.html#Width"><span class="Identifier">Width</span></a> <span class="Other">=</span> <span class="Keyword">enum</span>
-  <span class="Identifier">w64</span> <span class="Other">=</span> <span class="DecNumber">4</span><span class="Other">,</span>                  <span class="Comment">## 4 × 64-bit elements (256 bits total)</span>
-  <span class="Identifier">w32</span> <span class="Other">=</span> <span class="DecNumber">8</span><span class="Other">,</span>                  <span class="Comment">## 8 × 32-bit elements (256 bits total)</span>
-  <span class="Identifier">w16</span> <span class="Other">=</span> <span class="DecNumber">16</span><span class="Other">,</span>                 <span class="Comment">## 16 × 16-bit elements (256 bits total)</span>
-  <span class="Identifier">w8</span> <span class="Other">=</span> <span class="DecNumber">32</span>                    <span class="Comment">## 32 × 8-bit elements (256 bits total)</span></pre></dt>
+  <dt><pre><a href="mmops.html#Width"><span class="Identifier">Width</span></a> <span class="Other">=</span> <span class="Identifier">static</span><span class="Other">[</span><span class="Identifier">int</span><span class="Other">]</span></pre></dt>
   <dd>
     
-    
+    Number of elements in SIMD vector (4, 8, 16, or 32)
     
   </dd>
 </div>
@@ -590,34 +588,34 @@ else:
   <dl class="item">
     <div id="load-procs-all">
   <div id="load,array[,T]_4">
-  <dt><pre><span class="Keyword">proc</span> <a href="#load%2Carray%5B%2CT%5D_4"><span class="Identifier">load</span></a><span class="Other">[</span><span class="Identifier">T</span><span class="Other">]</span><span class="Other">(</span><span class="Identifier">p</span><span class="Other">:</span> <span class="Identifier">array</span><span class="Other">[</span><span class="DecNumber">4</span><span class="Other">,</span> <span class="Identifier">T</span><span class="Other">]</span><span class="Other">)</span><span class="Other">:</span> <a href="mmops.html#Mm"><span class="Identifier">Mm</span></a><span class="Other">[</span><span class="Identifier">w64</span><span class="Other">,</span> <span class="Identifier">T</span><span class="Other">]</span></pre></dt>
+  <dt><pre><span class="Keyword">proc</span> <a href="#load%2Carray%5B%2CT%5D_4"><span class="Identifier">load</span></a><span class="Other">[</span><span class="Identifier">T</span><span class="Other">]</span><span class="Other">(</span><span class="Identifier">p</span><span class="Other">:</span> <span class="Identifier">array</span><span class="Other">[</span><span class="DecNumber">4</span><span class="Other">,</span> <span class="Identifier">T</span><span class="Other">]</span><span class="Other">)</span><span class="Other">:</span> <a href="mmops.html#Mm"><span class="Identifier">Mm</span></a><span class="Other">[</span><span class="DecNumber">4</span><span class="Other">,</span> <span class="Identifier">T</span><span class="Other">]</span></pre></dt>
   <dd>
     
-    Load array into Mm vector (assumes 64-bit elements = 4 elements)
+    Load array into Mm vector (4 elements)
     
   </dd>
 </div>
 <div id="load,array[,T]_3">
-  <dt><pre><span class="Keyword">proc</span> <a href="#load%2Carray%5B%2CT%5D_3"><span class="Identifier">load</span></a><span class="Other">[</span><span class="Identifier">T</span><span class="Other">]</span><span class="Other">(</span><span class="Identifier">p</span><span class="Other">:</span> <span class="Identifier">array</span><span class="Other">[</span><span class="DecNumber">8</span><span class="Other">,</span> <span class="Identifier">T</span><span class="Other">]</span><span class="Other">)</span><span class="Other">:</span> <a href="mmops.html#Mm"><span class="Identifier">Mm</span></a><span class="Other">[</span><span class="Identifier">w32</span><span class="Other">,</span> <span class="Identifier">T</span><span class="Other">]</span></pre></dt>
+  <dt><pre><span class="Keyword">proc</span> <a href="#load%2Carray%5B%2CT%5D_3"><span class="Identifier">load</span></a><span class="Other">[</span><span class="Identifier">T</span><span class="Other">]</span><span class="Other">(</span><span class="Identifier">p</span><span class="Other">:</span> <span class="Identifier">array</span><span class="Other">[</span><span class="DecNumber">8</span><span class="Other">,</span> <span class="Identifier">T</span><span class="Other">]</span><span class="Other">)</span><span class="Other">:</span> <a href="mmops.html#Mm"><span class="Identifier">Mm</span></a><span class="Other">[</span><span class="DecNumber">8</span><span class="Other">,</span> <span class="Identifier">T</span><span class="Other">]</span></pre></dt>
   <dd>
     
-    Load array into Mm vector (assumes 32-bit elements = 8 elements)
+    Load array into Mm vector (8 elements)
     
   </dd>
 </div>
 <div id="load,array[,T]_2">
-  <dt><pre><span class="Keyword">proc</span> <a href="#load%2Carray%5B%2CT%5D_2"><span class="Identifier">load</span></a><span class="Other">[</span><span class="Identifier">T</span><span class="Other">]</span><span class="Other">(</span><span class="Identifier">p</span><span class="Other">:</span> <span class="Identifier">array</span><span class="Other">[</span><span class="DecNumber">16</span><span class="Other">,</span> <span class="Identifier">T</span><span class="Other">]</span><span class="Other">)</span><span class="Other">:</span> <a href="mmops.html#Mm"><span class="Identifier">Mm</span></a><span class="Other">[</span><span class="Identifier">w16</span><span class="Other">,</span> <span class="Identifier">T</span><span class="Other">]</span></pre></dt>
+  <dt><pre><span class="Keyword">proc</span> <a href="#load%2Carray%5B%2CT%5D_2"><span class="Identifier">load</span></a><span class="Other">[</span><span class="Identifier">T</span><span class="Other">]</span><span class="Other">(</span><span class="Identifier">p</span><span class="Other">:</span> <span class="Identifier">array</span><span class="Other">[</span><span class="DecNumber">16</span><span class="Other">,</span> <span class="Identifier">T</span><span class="Other">]</span><span class="Other">)</span><span class="Other">:</span> <a href="mmops.html#Mm"><span class="Identifier">Mm</span></a><span class="Other">[</span><span class="DecNumber">16</span><span class="Other">,</span> <span class="Identifier">T</span><span class="Other">]</span></pre></dt>
   <dd>
     
-    Load array into Mm vector (assumes 16-bit elements = 16 elements)
+    Load array into Mm vector (16 elements)
     
   </dd>
 </div>
 <div id="load,array[,T]">
-  <dt><pre><span class="Keyword">proc</span> <a href="#load%2Carray%5B%2CT%5D"><span class="Identifier">load</span></a><span class="Other">[</span><span class="Identifier">T</span><span class="Other">]</span><span class="Other">(</span><span class="Identifier">p</span><span class="Other">:</span> <span class="Identifier">array</span><span class="Other">[</span><span class="DecNumber">32</span><span class="Other">,</span> <span class="Identifier">T</span><span class="Other">]</span><span class="Other">)</span><span class="Other">:</span> <a href="mmops.html#Mm"><span class="Identifier">Mm</span></a><span class="Other">[</span><span class="Identifier">w8</span><span class="Other">,</span> <span class="Identifier">T</span><span class="Other">]</span></pre></dt>
+  <dt><pre><span class="Keyword">proc</span> <a href="#load%2Carray%5B%2CT%5D"><span class="Identifier">load</span></a><span class="Other">[</span><span class="Identifier">T</span><span class="Other">]</span><span class="Other">(</span><span class="Identifier">p</span><span class="Other">:</span> <span class="Identifier">array</span><span class="Other">[</span><span class="DecNumber">32</span><span class="Other">,</span> <span class="Identifier">T</span><span class="Other">]</span><span class="Other">)</span><span class="Other">:</span> <a href="mmops.html#Mm"><span class="Identifier">Mm</span></a><span class="Other">[</span><span class="DecNumber">32</span><span class="Other">,</span> <span class="Identifier">T</span><span class="Other">]</span></pre></dt>
   <dd>
     
-    Load array into Mm vector (assumes 8-bit elements = 32 elements)
+    Load array into Mm vector (32 elements)
     
   </dd>
 </div>
@@ -909,21 +907,19 @@ else:
 
 </div>
 <div id="gather-templates-all">
-  <div id="gather.t,openArray[T],Mm[Width,int32],int32">
-  <dt><pre><span class="Keyword">template</span> <a href="#gather.t%2CopenArray%5BT%5D%2CMm%5BWidth%2Cint32%5D%2Cint32"><span class="Identifier">gather</span></a><span class="Other">[</span><span class="Identifier">T</span><span class="Other">]</span><span class="Other">(</span><span class="Identifier">p</span><span class="Other">:</span> <span class="Identifier">openArray</span><span class="Other">[</span><span class="Identifier">T</span><span class="Other">]</span><span class="Other">;</span> <span class="Identifier">vindex</span><span class="Other">:</span> <a href="mmops.html#Mm"><span class="Identifier">Mm</span></a><span class="Other">[</span><span class="Identifier">w32</span><span class="Other">,</span> <span class="Identifier">int32</span><span class="Other">]</span><span class="Other">;</span> <span class="Identifier">scale</span><span class="Other">:</span> <span class="Identifier">int32</span><span class="Other">)</span><span class="Other">:</span> <a href="mmops.html#Mm"><span class="Identifier">Mm</span></a><span class="Other">[</span>
-    <span class="Identifier">w32</span><span class="Other">,</span> <span class="Identifier">T</span><span class="Other">]</span></pre></dt>
-  <dd>
-    
-    Gather elements from memory using 32-bit indices
-    
-  </dd>
-</div>
-<div id="gather.t,openArray[T],Mm[Width,int64],int32">
-  <dt><pre><span class="Keyword">template</span> <a href="#gather.t%2CopenArray%5BT%5D%2CMm%5BWidth%2Cint64%5D%2Cint32"><span class="Identifier">gather</span></a><span class="Other">[</span><span class="Identifier">T</span><span class="Other">]</span><span class="Other">(</span><span class="Identifier">p</span><span class="Other">:</span> <span class="Identifier">openArray</span><span class="Other">[</span><span class="Identifier">T</span><span class="Other">]</span><span class="Other">;</span> <span class="Identifier">vindex</span><span class="Other">:</span> <a href="mmops.html#Mm"><span class="Identifier">Mm</span></a><span class="Other">[</span><span class="Identifier">w64</span><span class="Other">,</span> <span class="Identifier">int64</span><span class="Other">]</span><span class="Other">;</span> <span class="Identifier">scale</span><span class="Other">:</span> <span class="Identifier">int32</span><span class="Other">)</span><span class="Other">:</span> <a href="mmops.html#Mm"><span class="Identifier">Mm</span></a><span class="Other">[</span>
-    <span class="Identifier">w64</span><span class="Other">,</span> <span class="Identifier">T</span><span class="Other">]</span></pre></dt>
+  <div id="gather.t,openArray[T],Mm[,int64],int32">
+  <dt><pre><span class="Keyword">template</span> <a href="#gather.t%2CopenArray%5BT%5D%2CMm%5B%2Cint64%5D%2Cint32"><span class="Identifier">gather</span></a><span class="Other">[</span><span class="Identifier">T</span><span class="Other">]</span><span class="Other">(</span><span class="Identifier">p</span><span class="Other">:</span> <span class="Identifier">openArray</span><span class="Other">[</span><span class="Identifier">T</span><span class="Other">]</span><span class="Other">;</span> <span class="Identifier">vindex</span><span class="Other">:</span> <a href="mmops.html#Mm"><span class="Identifier">Mm</span></a><span class="Other">[</span><span class="DecNumber">4</span><span class="Other">,</span> <span class="Identifier">int64</span><span class="Other">]</span><span class="Other">;</span> <span class="Identifier">scale</span><span class="Other">:</span> <span class="Identifier">int32</span><span class="Other">)</span><span class="Other">:</span> <a href="mmops.html#Mm"><span class="Identifier">Mm</span></a><span class="Other">[</span><span class="DecNumber">4</span><span class="Other">,</span> <span class="Identifier">T</span><span class="Other">]</span></pre></dt>
   <dd>
     
     Gather elements from memory using 64-bit indices
+    
+  </dd>
+</div>
+<div id="gather.t,openArray[T],Mm[,int32],int32">
+  <dt><pre><span class="Keyword">template</span> <a href="#gather.t%2CopenArray%5BT%5D%2CMm%5B%2Cint32%5D%2Cint32"><span class="Identifier">gather</span></a><span class="Other">[</span><span class="Identifier">T</span><span class="Other">]</span><span class="Other">(</span><span class="Identifier">p</span><span class="Other">:</span> <span class="Identifier">openArray</span><span class="Other">[</span><span class="Identifier">T</span><span class="Other">]</span><span class="Other">;</span> <span class="Identifier">vindex</span><span class="Other">:</span> <a href="mmops.html#Mm"><span class="Identifier">Mm</span></a><span class="Other">[</span><span class="DecNumber">8</span><span class="Other">,</span> <span class="Identifier">int32</span><span class="Other">]</span><span class="Other">;</span> <span class="Identifier">scale</span><span class="Other">:</span> <span class="Identifier">int32</span><span class="Other">)</span><span class="Other">:</span> <a href="mmops.html#Mm"><span class="Identifier">Mm</span></a><span class="Other">[</span><span class="DecNumber">8</span><span class="Other">,</span> <span class="Identifier">T</span><span class="Other">]</span></pre></dt>
+  <dd>
+    
+    Gather elements from memory using 32-bit indices
     
   </dd>
 </div>
@@ -953,7 +949,7 @@ else:
 </div>
 <div id="initMm-templates-all">
   <div id="initMm.t,float64,float64,float64,float64">
-  <dt><pre><span class="Keyword">template</span> <a href="#initMm.t%2Cfloat64%2Cfloat64%2Cfloat64%2Cfloat64"><span class="Identifier">initMm</span></a><span class="Other">(</span><span class="Identifier">e3</span><span class="Other">,</span> <span class="Identifier">e2</span><span class="Other">,</span> <span class="Identifier">e1</span><span class="Other">,</span> <span class="Identifier">e0</span><span class="Other">:</span> <span class="Identifier">float64</span><span class="Other">)</span><span class="Other">:</span> <a href="mmops.html#Mm"><span class="Identifier">Mm</span></a><span class="Other">[</span><span class="Identifier">w64</span><span class="Other">,</span> <span class="Identifier">float64</span><span class="Other">]</span></pre></dt>
+  <dt><pre><span class="Keyword">template</span> <a href="#initMm.t%2Cfloat64%2Cfloat64%2Cfloat64%2Cfloat64"><span class="Identifier">initMm</span></a><span class="Other">(</span><span class="Identifier">e3</span><span class="Other">,</span> <span class="Identifier">e2</span><span class="Other">,</span> <span class="Identifier">e1</span><span class="Other">,</span> <span class="Identifier">e0</span><span class="Other">:</span> <span class="Identifier">float64</span><span class="Other">)</span><span class="Other">:</span> <a href="mmops.html#Mm"><span class="Identifier">Mm</span></a><span class="Other">[</span><span class="DecNumber">4</span><span class="Other">,</span> <span class="Identifier">float64</span><span class="Other">]</span></pre></dt>
   <dd>
     
     
@@ -961,7 +957,7 @@ else:
   </dd>
 </div>
 <div id="initMm.t,int64,int64,int64,int64">
-  <dt><pre><span class="Keyword">template</span> <a href="#initMm.t%2Cint64%2Cint64%2Cint64%2Cint64"><span class="Identifier">initMm</span></a><span class="Other">(</span><span class="Identifier">e3</span><span class="Other">,</span> <span class="Identifier">e2</span><span class="Other">,</span> <span class="Identifier">e1</span><span class="Other">,</span> <span class="Identifier">e0</span><span class="Other">:</span> <span class="Identifier">int64</span><span class="Other">)</span><span class="Other">:</span> <a href="mmops.html#Mm"><span class="Identifier">Mm</span></a><span class="Other">[</span><span class="Identifier">w64</span><span class="Other">,</span> <span class="Identifier">int64</span><span class="Other">]</span></pre></dt>
+  <dt><pre><span class="Keyword">template</span> <a href="#initMm.t%2Cint64%2Cint64%2Cint64%2Cint64"><span class="Identifier">initMm</span></a><span class="Other">(</span><span class="Identifier">e3</span><span class="Other">,</span> <span class="Identifier">e2</span><span class="Other">,</span> <span class="Identifier">e1</span><span class="Other">,</span> <span class="Identifier">e0</span><span class="Other">:</span> <span class="Identifier">int64</span><span class="Other">)</span><span class="Other">:</span> <a href="mmops.html#Mm"><span class="Identifier">Mm</span></a><span class="Other">[</span><span class="DecNumber">4</span><span class="Other">,</span> <span class="Identifier">int64</span><span class="Other">]</span></pre></dt>
   <dd>
     
     
@@ -969,7 +965,7 @@ else:
   </dd>
 </div>
 <div id="initMm.t,uint64,uint64,uint64,uint64">
-  <dt><pre><span class="Keyword">template</span> <a href="#initMm.t%2Cuint64%2Cuint64%2Cuint64%2Cuint64"><span class="Identifier">initMm</span></a><span class="Other">(</span><span class="Identifier">e3</span><span class="Other">,</span> <span class="Identifier">e2</span><span class="Other">,</span> <span class="Identifier">e1</span><span class="Other">,</span> <span class="Identifier">e0</span><span class="Other">:</span> <span class="Identifier">uint64</span><span class="Other">)</span><span class="Other">:</span> <a href="mmops.html#Mm"><span class="Identifier">Mm</span></a><span class="Other">[</span><span class="Identifier">w64</span><span class="Other">,</span> <span class="Identifier">uint64</span><span class="Other">]</span></pre></dt>
+  <dt><pre><span class="Keyword">template</span> <a href="#initMm.t%2Cuint64%2Cuint64%2Cuint64%2Cuint64"><span class="Identifier">initMm</span></a><span class="Other">(</span><span class="Identifier">e3</span><span class="Other">,</span> <span class="Identifier">e2</span><span class="Other">,</span> <span class="Identifier">e1</span><span class="Other">,</span> <span class="Identifier">e0</span><span class="Other">:</span> <span class="Identifier">uint64</span><span class="Other">)</span><span class="Other">:</span> <a href="mmops.html#Mm"><span class="Identifier">Mm</span></a><span class="Other">[</span><span class="DecNumber">4</span><span class="Other">,</span> <span class="Identifier">uint64</span><span class="Other">]</span></pre></dt>
   <dd>
     
     
@@ -977,7 +973,7 @@ else:
   </dd>
 </div>
 <div id="initMm.t,float32,float32,float32,float32,float32,float32,float32,float32">
-  <dt><pre><span class="Keyword">template</span> <a href="#initMm.t%2Cfloat32%2Cfloat32%2Cfloat32%2Cfloat32%2Cfloat32%2Cfloat32%2Cfloat32%2Cfloat32"><span class="Identifier">initMm</span></a><span class="Other">(</span><span class="Identifier">e7</span><span class="Other">,</span> <span class="Identifier">e6</span><span class="Other">,</span> <span class="Identifier">e5</span><span class="Other">,</span> <span class="Identifier">e4</span><span class="Other">,</span> <span class="Identifier">e3</span><span class="Other">,</span> <span class="Identifier">e2</span><span class="Other">,</span> <span class="Identifier">e1</span><span class="Other">,</span> <span class="Identifier">e0</span><span class="Other">:</span> <span class="Identifier">float32</span><span class="Other">)</span><span class="Other">:</span> <a href="mmops.html#Mm"><span class="Identifier">Mm</span></a><span class="Other">[</span><span class="Identifier">w32</span><span class="Other">,</span> <span class="Identifier">float32</span><span class="Other">]</span></pre></dt>
+  <dt><pre><span class="Keyword">template</span> <a href="#initMm.t%2Cfloat32%2Cfloat32%2Cfloat32%2Cfloat32%2Cfloat32%2Cfloat32%2Cfloat32%2Cfloat32"><span class="Identifier">initMm</span></a><span class="Other">(</span><span class="Identifier">e7</span><span class="Other">,</span> <span class="Identifier">e6</span><span class="Other">,</span> <span class="Identifier">e5</span><span class="Other">,</span> <span class="Identifier">e4</span><span class="Other">,</span> <span class="Identifier">e3</span><span class="Other">,</span> <span class="Identifier">e2</span><span class="Other">,</span> <span class="Identifier">e1</span><span class="Other">,</span> <span class="Identifier">e0</span><span class="Other">:</span> <span class="Identifier">float32</span><span class="Other">)</span><span class="Other">:</span> <a href="mmops.html#Mm"><span class="Identifier">Mm</span></a><span class="Other">[</span><span class="DecNumber">8</span><span class="Other">,</span> <span class="Identifier">float32</span><span class="Other">]</span></pre></dt>
   <dd>
     
     
@@ -985,7 +981,7 @@ else:
   </dd>
 </div>
 <div id="initMm.t,int32,int32,int32,int32,int32,int32,int32,int32">
-  <dt><pre><span class="Keyword">template</span> <a href="#initMm.t%2Cint32%2Cint32%2Cint32%2Cint32%2Cint32%2Cint32%2Cint32%2Cint32"><span class="Identifier">initMm</span></a><span class="Other">(</span><span class="Identifier">e7</span><span class="Other">,</span> <span class="Identifier">e6</span><span class="Other">,</span> <span class="Identifier">e5</span><span class="Other">,</span> <span class="Identifier">e4</span><span class="Other">,</span> <span class="Identifier">e3</span><span class="Other">,</span> <span class="Identifier">e2</span><span class="Other">,</span> <span class="Identifier">e1</span><span class="Other">,</span> <span class="Identifier">e0</span><span class="Other">:</span> <span class="Identifier">int32</span><span class="Other">)</span><span class="Other">:</span> <a href="mmops.html#Mm"><span class="Identifier">Mm</span></a><span class="Other">[</span><span class="Identifier">w32</span><span class="Other">,</span> <span class="Identifier">int32</span><span class="Other">]</span></pre></dt>
+  <dt><pre><span class="Keyword">template</span> <a href="#initMm.t%2Cint32%2Cint32%2Cint32%2Cint32%2Cint32%2Cint32%2Cint32%2Cint32"><span class="Identifier">initMm</span></a><span class="Other">(</span><span class="Identifier">e7</span><span class="Other">,</span> <span class="Identifier">e6</span><span class="Other">,</span> <span class="Identifier">e5</span><span class="Other">,</span> <span class="Identifier">e4</span><span class="Other">,</span> <span class="Identifier">e3</span><span class="Other">,</span> <span class="Identifier">e2</span><span class="Other">,</span> <span class="Identifier">e1</span><span class="Other">,</span> <span class="Identifier">e0</span><span class="Other">:</span> <span class="Identifier">int32</span><span class="Other">)</span><span class="Other">:</span> <a href="mmops.html#Mm"><span class="Identifier">Mm</span></a><span class="Other">[</span><span class="DecNumber">8</span><span class="Other">,</span> <span class="Identifier">int32</span><span class="Other">]</span></pre></dt>
   <dd>
     
     
@@ -993,7 +989,7 @@ else:
   </dd>
 </div>
 <div id="initMm.t,uint32,uint32,uint32,uint32,uint32,uint32,uint32,uint32">
-  <dt><pre><span class="Keyword">template</span> <a href="#initMm.t%2Cuint32%2Cuint32%2Cuint32%2Cuint32%2Cuint32%2Cuint32%2Cuint32%2Cuint32"><span class="Identifier">initMm</span></a><span class="Other">(</span><span class="Identifier">e7</span><span class="Other">,</span> <span class="Identifier">e6</span><span class="Other">,</span> <span class="Identifier">e5</span><span class="Other">,</span> <span class="Identifier">e4</span><span class="Other">,</span> <span class="Identifier">e3</span><span class="Other">,</span> <span class="Identifier">e2</span><span class="Other">,</span> <span class="Identifier">e1</span><span class="Other">,</span> <span class="Identifier">e0</span><span class="Other">:</span> <span class="Identifier">uint32</span><span class="Other">)</span><span class="Other">:</span> <a href="mmops.html#Mm"><span class="Identifier">Mm</span></a><span class="Other">[</span><span class="Identifier">w32</span><span class="Other">,</span> <span class="Identifier">uint32</span><span class="Other">]</span></pre></dt>
+  <dt><pre><span class="Keyword">template</span> <a href="#initMm.t%2Cuint32%2Cuint32%2Cuint32%2Cuint32%2Cuint32%2Cuint32%2Cuint32%2Cuint32"><span class="Identifier">initMm</span></a><span class="Other">(</span><span class="Identifier">e7</span><span class="Other">,</span> <span class="Identifier">e6</span><span class="Other">,</span> <span class="Identifier">e5</span><span class="Other">,</span> <span class="Identifier">e4</span><span class="Other">,</span> <span class="Identifier">e3</span><span class="Other">,</span> <span class="Identifier">e2</span><span class="Other">,</span> <span class="Identifier">e1</span><span class="Other">,</span> <span class="Identifier">e0</span><span class="Other">:</span> <span class="Identifier">uint32</span><span class="Other">)</span><span class="Other">:</span> <a href="mmops.html#Mm"><span class="Identifier">Mm</span></a><span class="Other">[</span><span class="DecNumber">8</span><span class="Other">,</span> <span class="Identifier">uint32</span><span class="Other">]</span></pre></dt>
   <dd>
     
     
@@ -1002,7 +998,7 @@ else:
 </div>
 <div id="initMm.t,int16,int16,int16,int16,int16,int16,int16,int16,int16,int16,int16,int16,int16,int16,int16,int16">
   <dt><pre><span class="Keyword">template</span> <a href="#initMm.t%2Cint16%2Cint16%2Cint16%2Cint16%2Cint16%2Cint16%2Cint16%2Cint16%2Cint16%2Cint16%2Cint16%2Cint16%2Cint16%2Cint16%2Cint16%2Cint16"><span class="Identifier">initMm</span></a><span class="Other">(</span><span class="Identifier">e15</span><span class="Other">,</span> <span class="Identifier">e14</span><span class="Other">,</span> <span class="Identifier">e13</span><span class="Other">,</span> <span class="Identifier">e12</span><span class="Other">,</span> <span class="Identifier">e11</span><span class="Other">,</span> <span class="Identifier">e10</span><span class="Other">,</span> <span class="Identifier">e9</span><span class="Other">,</span> <span class="Identifier">e8</span><span class="Other">,</span> <span class="Identifier">e7</span><span class="Other">,</span> <span class="Identifier">e6</span><span class="Other">,</span> <span class="Identifier">e5</span><span class="Other">,</span> <span class="Identifier">e4</span><span class="Other">,</span> <span class="Identifier">e3</span><span class="Other">,</span> <span class="Identifier">e2</span><span class="Other">,</span>
-                <span class="Identifier">e1</span><span class="Other">,</span> <span class="Identifier">e0</span><span class="Other">:</span> <span class="Identifier">int16</span><span class="Other">)</span><span class="Other">:</span> <a href="mmops.html#Mm"><span class="Identifier">Mm</span></a><span class="Other">[</span><span class="Identifier">w16</span><span class="Other">,</span> <span class="Identifier">int16</span><span class="Other">]</span></pre></dt>
+                <span class="Identifier">e1</span><span class="Other">,</span> <span class="Identifier">e0</span><span class="Other">:</span> <span class="Identifier">int16</span><span class="Other">)</span><span class="Other">:</span> <a href="mmops.html#Mm"><span class="Identifier">Mm</span></a><span class="Other">[</span><span class="DecNumber">16</span><span class="Other">,</span> <span class="Identifier">int16</span><span class="Other">]</span></pre></dt>
   <dd>
     
     
@@ -1011,7 +1007,7 @@ else:
 </div>
 <div id="initMm.t,uint16,uint16,uint16,uint16,uint16,uint16,uint16,uint16,uint16,uint16,uint16,uint16,uint16,uint16,uint16,uint16">
   <dt><pre><span class="Keyword">template</span> <a href="#initMm.t%2Cuint16%2Cuint16%2Cuint16%2Cuint16%2Cuint16%2Cuint16%2Cuint16%2Cuint16%2Cuint16%2Cuint16%2Cuint16%2Cuint16%2Cuint16%2Cuint16%2Cuint16%2Cuint16"><span class="Identifier">initMm</span></a><span class="Other">(</span><span class="Identifier">e15</span><span class="Other">,</span> <span class="Identifier">e14</span><span class="Other">,</span> <span class="Identifier">e13</span><span class="Other">,</span> <span class="Identifier">e12</span><span class="Other">,</span> <span class="Identifier">e11</span><span class="Other">,</span> <span class="Identifier">e10</span><span class="Other">,</span> <span class="Identifier">e9</span><span class="Other">,</span> <span class="Identifier">e8</span><span class="Other">,</span> <span class="Identifier">e7</span><span class="Other">,</span> <span class="Identifier">e6</span><span class="Other">,</span> <span class="Identifier">e5</span><span class="Other">,</span> <span class="Identifier">e4</span><span class="Other">,</span> <span class="Identifier">e3</span><span class="Other">,</span> <span class="Identifier">e2</span><span class="Other">,</span>
-                <span class="Identifier">e1</span><span class="Other">,</span> <span class="Identifier">e0</span><span class="Other">:</span> <span class="Identifier">uint16</span><span class="Other">)</span><span class="Other">:</span> <a href="mmops.html#Mm"><span class="Identifier">Mm</span></a><span class="Other">[</span><span class="Identifier">w16</span><span class="Other">,</span> <span class="Identifier">uint16</span><span class="Other">]</span></pre></dt>
+                <span class="Identifier">e1</span><span class="Other">,</span> <span class="Identifier">e0</span><span class="Other">:</span> <span class="Identifier">uint16</span><span class="Other">)</span><span class="Other">:</span> <a href="mmops.html#Mm"><span class="Identifier">Mm</span></a><span class="Other">[</span><span class="DecNumber">16</span><span class="Other">,</span> <span class="Identifier">uint16</span><span class="Other">]</span></pre></dt>
   <dd>
     
     
@@ -1021,7 +1017,7 @@ else:
 <div id="initMm.t,int8,int8,int8,int8,int8,int8,int8,int8,int8,int8,int8,int8,int8,int8,int8,int8,int8,int8,int8,int8,int8,int8,int8,int8,int8,int8,int8,int8,int8,int8,int8,int8">
   <dt><pre><span class="Keyword">template</span> <a href="#initMm.t%2Cint8%2Cint8%2Cint8%2Cint8%2Cint8%2Cint8%2Cint8%2Cint8%2Cint8%2Cint8%2Cint8%2Cint8%2Cint8%2Cint8%2Cint8%2Cint8%2Cint8%2Cint8%2Cint8%2Cint8%2Cint8%2Cint8%2Cint8%2Cint8%2Cint8%2Cint8%2Cint8%2Cint8%2Cint8%2Cint8%2Cint8%2Cint8"><span class="Identifier">initMm</span></a><span class="Other">(</span><span class="Identifier">e31</span><span class="Other">,</span> <span class="Identifier">e30</span><span class="Other">,</span> <span class="Identifier">e29</span><span class="Other">,</span> <span class="Identifier">e28</span><span class="Other">,</span> <span class="Identifier">e27</span><span class="Other">,</span> <span class="Identifier">e26</span><span class="Other">,</span> <span class="Identifier">e25</span><span class="Other">,</span> <span class="Identifier">e24</span><span class="Other">,</span> <span class="Identifier">e23</span><span class="Other">,</span> <span class="Identifier">e22</span><span class="Other">,</span> <span class="Identifier">e21</span><span class="Other">,</span> <span class="Identifier">e20</span><span class="Other">,</span> <span class="Identifier">e19</span><span class="Other">,</span>
                 <span class="Identifier">e18</span><span class="Other">,</span> <span class="Identifier">e17</span><span class="Other">,</span> <span class="Identifier">e16</span><span class="Other">,</span> <span class="Identifier">e15</span><span class="Other">,</span> <span class="Identifier">e14</span><span class="Other">,</span> <span class="Identifier">e13</span><span class="Other">,</span> <span class="Identifier">e12</span><span class="Other">,</span> <span class="Identifier">e11</span><span class="Other">,</span> <span class="Identifier">e10</span><span class="Other">,</span> <span class="Identifier">e9</span><span class="Other">,</span> <span class="Identifier">e8</span><span class="Other">,</span> <span class="Identifier">e7</span><span class="Other">,</span> <span class="Identifier">e6</span><span class="Other">,</span> <span class="Identifier">e5</span><span class="Other">,</span>
-                <span class="Identifier">e4</span><span class="Other">,</span> <span class="Identifier">e3</span><span class="Other">,</span> <span class="Identifier">e2</span><span class="Other">,</span> <span class="Identifier">e1</span><span class="Other">,</span> <span class="Identifier">e0</span><span class="Other">:</span> <span class="Identifier">int8</span><span class="Other">)</span><span class="Other">:</span> <a href="mmops.html#Mm"><span class="Identifier">Mm</span></a><span class="Other">[</span><span class="Identifier">w8</span><span class="Other">,</span> <span class="Identifier">int8</span><span class="Other">]</span></pre></dt>
+                <span class="Identifier">e4</span><span class="Other">,</span> <span class="Identifier">e3</span><span class="Other">,</span> <span class="Identifier">e2</span><span class="Other">,</span> <span class="Identifier">e1</span><span class="Other">,</span> <span class="Identifier">e0</span><span class="Other">:</span> <span class="Identifier">int8</span><span class="Other">)</span><span class="Other">:</span> <a href="mmops.html#Mm"><span class="Identifier">Mm</span></a><span class="Other">[</span><span class="DecNumber">32</span><span class="Other">,</span> <span class="Identifier">int8</span><span class="Other">]</span></pre></dt>
   <dd>
     
     
@@ -1031,7 +1027,7 @@ else:
 <div id="initMm.t,uint8,uint8,uint8,uint8,uint8,uint8,uint8,uint8,uint8,uint8,uint8,uint8,uint8,uint8,uint8,uint8,uint8,uint8,uint8,uint8,uint8,uint8,uint8,uint8,uint8,uint8,uint8,uint8,uint8,uint8,uint8,uint8">
   <dt><pre><span class="Keyword">template</span> <a href="#initMm.t%2Cuint8%2Cuint8%2Cuint8%2Cuint8%2Cuint8%2Cuint8%2Cuint8%2Cuint8%2Cuint8%2Cuint8%2Cuint8%2Cuint8%2Cuint8%2Cuint8%2Cuint8%2Cuint8%2Cuint8%2Cuint8%2Cuint8%2Cuint8%2Cuint8%2Cuint8%2Cuint8%2Cuint8%2Cuint8%2Cuint8%2Cuint8%2Cuint8%2Cuint8%2Cuint8%2Cuint8%2Cuint8"><span class="Identifier">initMm</span></a><span class="Other">(</span><span class="Identifier">e31</span><span class="Other">,</span> <span class="Identifier">e30</span><span class="Other">,</span> <span class="Identifier">e29</span><span class="Other">,</span> <span class="Identifier">e28</span><span class="Other">,</span> <span class="Identifier">e27</span><span class="Other">,</span> <span class="Identifier">e26</span><span class="Other">,</span> <span class="Identifier">e25</span><span class="Other">,</span> <span class="Identifier">e24</span><span class="Other">,</span> <span class="Identifier">e23</span><span class="Other">,</span> <span class="Identifier">e22</span><span class="Other">,</span> <span class="Identifier">e21</span><span class="Other">,</span> <span class="Identifier">e20</span><span class="Other">,</span> <span class="Identifier">e19</span><span class="Other">,</span>
                 <span class="Identifier">e18</span><span class="Other">,</span> <span class="Identifier">e17</span><span class="Other">,</span> <span class="Identifier">e16</span><span class="Other">,</span> <span class="Identifier">e15</span><span class="Other">,</span> <span class="Identifier">e14</span><span class="Other">,</span> <span class="Identifier">e13</span><span class="Other">,</span> <span class="Identifier">e12</span><span class="Other">,</span> <span class="Identifier">e11</span><span class="Other">,</span> <span class="Identifier">e10</span><span class="Other">,</span> <span class="Identifier">e9</span><span class="Other">,</span> <span class="Identifier">e8</span><span class="Other">,</span> <span class="Identifier">e7</span><span class="Other">,</span> <span class="Identifier">e6</span><span class="Other">,</span> <span class="Identifier">e5</span><span class="Other">,</span>
-                <span class="Identifier">e4</span><span class="Other">,</span> <span class="Identifier">e3</span><span class="Other">,</span> <span class="Identifier">e2</span><span class="Other">,</span> <span class="Identifier">e1</span><span class="Other">,</span> <span class="Identifier">e0</span><span class="Other">:</span> <span class="Identifier">uint8</span><span class="Other">)</span><span class="Other">:</span> <a href="mmops.html#Mm"><span class="Identifier">Mm</span></a><span class="Other">[</span><span class="Identifier">w8</span><span class="Other">,</span> <span class="Identifier">uint8</span><span class="Other">]</span></pre></dt>
+                <span class="Identifier">e4</span><span class="Other">,</span> <span class="Identifier">e3</span><span class="Other">,</span> <span class="Identifier">e2</span><span class="Other">,</span> <span class="Identifier">e1</span><span class="Other">,</span> <span class="Identifier">e0</span><span class="Other">:</span> <span class="Identifier">uint8</span><span class="Other">)</span><span class="Other">:</span> <a href="mmops.html#Mm"><span class="Identifier">Mm</span></a><span class="Other">[</span><span class="DecNumber">32</span><span class="Other">,</span> <span class="Identifier">uint8</span><span class="Other">]</span></pre></dt>
   <dd>
     
     
@@ -1270,88 +1266,88 @@ else:
 </div>
 <div id="set-templates-all">
   <div id="set.t,float64,float64,float64,float64">
-  <dt><pre><span class="Keyword">template</span> <a href="#set.t%2Cfloat64%2Cfloat64%2Cfloat64%2Cfloat64"><span class="Identifier">set</span></a><span class="Other">(</span><span class="Identifier">e3</span><span class="Other">,</span> <span class="Identifier">e2</span><span class="Other">,</span> <span class="Identifier">e1</span><span class="Other">,</span> <span class="Identifier">e0</span><span class="Other">:</span> <span class="Identifier">float64</span><span class="Other">)</span><span class="Other">:</span> <a href="mmops.html#Mm"><span class="Identifier">Mm</span></a><span class="Other">[</span><span class="Identifier">w64</span><span class="Other">,</span> <span class="Identifier">float64</span><span class="Other">]</span></pre></dt>
+  <dt><pre><span class="Keyword">template</span> <a href="#set.t%2Cfloat64%2Cfloat64%2Cfloat64%2Cfloat64"><span class="Identifier">set</span></a><span class="Other">(</span><span class="Identifier">e3</span><span class="Other">,</span> <span class="Identifier">e2</span><span class="Other">,</span> <span class="Identifier">e1</span><span class="Other">,</span> <span class="Identifier">e0</span><span class="Other">:</span> <span class="Identifier">float64</span><span class="Other">)</span><span class="Other">:</span> <a href="mmops.html#Mm"><span class="Identifier">Mm</span></a><span class="Other">[</span><span class="DecNumber">4</span><span class="Other">,</span> <span class="Identifier">float64</span><span class="Other">]</span></pre></dt>
   <dd>
     
-    Set packed double-precision floating-point elements with specified values (e3 is highest)
+    Set 4 double-precision floating-point elements with specified values (e3 is highest)
     
   </dd>
 </div>
 <div id="set.t,int64,int64,int64,int64">
-  <dt><pre><span class="Keyword">template</span> <a href="#set.t%2Cint64%2Cint64%2Cint64%2Cint64"><span class="Identifier">set</span></a><span class="Other">(</span><span class="Identifier">e3</span><span class="Other">,</span> <span class="Identifier">e2</span><span class="Other">,</span> <span class="Identifier">e1</span><span class="Other">,</span> <span class="Identifier">e0</span><span class="Other">:</span> <span class="Identifier">int64</span><span class="Other">)</span><span class="Other">:</span> <a href="mmops.html#Mm"><span class="Identifier">Mm</span></a><span class="Other">[</span><span class="Identifier">w64</span><span class="Other">,</span> <span class="Identifier">int64</span><span class="Other">]</span></pre></dt>
+  <dt><pre><span class="Keyword">template</span> <a href="#set.t%2Cint64%2Cint64%2Cint64%2Cint64"><span class="Identifier">set</span></a><span class="Other">(</span><span class="Identifier">e3</span><span class="Other">,</span> <span class="Identifier">e2</span><span class="Other">,</span> <span class="Identifier">e1</span><span class="Other">,</span> <span class="Identifier">e0</span><span class="Other">:</span> <span class="Identifier">int64</span><span class="Other">)</span><span class="Other">:</span> <a href="mmops.html#Mm"><span class="Identifier">Mm</span></a><span class="Other">[</span><span class="DecNumber">4</span><span class="Other">,</span> <span class="Identifier">int64</span><span class="Other">]</span></pre></dt>
   <dd>
     
-    Set packed 64-bit integer elements with specified values (e3 is highest)
+    Set 4 64-bit integer elements with specified values (e3 is highest)
     
   </dd>
 </div>
 <div id="set.t,uint64,uint64,uint64,uint64">
-  <dt><pre><span class="Keyword">template</span> <a href="#set.t%2Cuint64%2Cuint64%2Cuint64%2Cuint64"><span class="Identifier">set</span></a><span class="Other">(</span><span class="Identifier">e3</span><span class="Other">,</span> <span class="Identifier">e2</span><span class="Other">,</span> <span class="Identifier">e1</span><span class="Other">,</span> <span class="Identifier">e0</span><span class="Other">:</span> <span class="Identifier">uint64</span><span class="Other">)</span><span class="Other">:</span> <a href="mmops.html#Mm"><span class="Identifier">Mm</span></a><span class="Other">[</span><span class="Identifier">w64</span><span class="Other">,</span> <span class="Identifier">uint64</span><span class="Other">]</span></pre></dt>
+  <dt><pre><span class="Keyword">template</span> <a href="#set.t%2Cuint64%2Cuint64%2Cuint64%2Cuint64"><span class="Identifier">set</span></a><span class="Other">(</span><span class="Identifier">e3</span><span class="Other">,</span> <span class="Identifier">e2</span><span class="Other">,</span> <span class="Identifier">e1</span><span class="Other">,</span> <span class="Identifier">e0</span><span class="Other">:</span> <span class="Identifier">uint64</span><span class="Other">)</span><span class="Other">:</span> <a href="mmops.html#Mm"><span class="Identifier">Mm</span></a><span class="Other">[</span><span class="DecNumber">4</span><span class="Other">,</span> <span class="Identifier">uint64</span><span class="Other">]</span></pre></dt>
   <dd>
     
-    Set packed 64-bit unsigned integer elements with specified values (e3 is highest)
+    Set 4 64-bit unsigned integer elements with specified values (e3 is highest)
     
   </dd>
 </div>
 <div id="set.t,float32,float32,float32,float32,float32,float32,float32,float32">
-  <dt><pre><span class="Keyword">template</span> <a href="#set.t%2Cfloat32%2Cfloat32%2Cfloat32%2Cfloat32%2Cfloat32%2Cfloat32%2Cfloat32%2Cfloat32"><span class="Identifier">set</span></a><span class="Other">(</span><span class="Identifier">e7</span><span class="Other">,</span> <span class="Identifier">e6</span><span class="Other">,</span> <span class="Identifier">e5</span><span class="Other">,</span> <span class="Identifier">e4</span><span class="Other">,</span> <span class="Identifier">e3</span><span class="Other">,</span> <span class="Identifier">e2</span><span class="Other">,</span> <span class="Identifier">e1</span><span class="Other">,</span> <span class="Identifier">e0</span><span class="Other">:</span> <span class="Identifier">float32</span><span class="Other">)</span><span class="Other">:</span> <a href="mmops.html#Mm"><span class="Identifier">Mm</span></a><span class="Other">[</span><span class="Identifier">w32</span><span class="Other">,</span> <span class="Identifier">float32</span><span class="Other">]</span></pre></dt>
+  <dt><pre><span class="Keyword">template</span> <a href="#set.t%2Cfloat32%2Cfloat32%2Cfloat32%2Cfloat32%2Cfloat32%2Cfloat32%2Cfloat32%2Cfloat32"><span class="Identifier">set</span></a><span class="Other">(</span><span class="Identifier">e7</span><span class="Other">,</span> <span class="Identifier">e6</span><span class="Other">,</span> <span class="Identifier">e5</span><span class="Other">,</span> <span class="Identifier">e4</span><span class="Other">,</span> <span class="Identifier">e3</span><span class="Other">,</span> <span class="Identifier">e2</span><span class="Other">,</span> <span class="Identifier">e1</span><span class="Other">,</span> <span class="Identifier">e0</span><span class="Other">:</span> <span class="Identifier">float32</span><span class="Other">)</span><span class="Other">:</span> <a href="mmops.html#Mm"><span class="Identifier">Mm</span></a><span class="Other">[</span><span class="DecNumber">8</span><span class="Other">,</span> <span class="Identifier">float32</span><span class="Other">]</span></pre></dt>
   <dd>
     
-    Set packed single-precision floating-point elements with specified values (e7 is highest)
+    Set 8 single-precision floating-point elements with specified values (e7 is highest)
     
   </dd>
 </div>
 <div id="set.t,int32,int32,int32,int32,int32,int32,int32,int32">
-  <dt><pre><span class="Keyword">template</span> <a href="#set.t%2Cint32%2Cint32%2Cint32%2Cint32%2Cint32%2Cint32%2Cint32%2Cint32"><span class="Identifier">set</span></a><span class="Other">(</span><span class="Identifier">e7</span><span class="Other">,</span> <span class="Identifier">e6</span><span class="Other">,</span> <span class="Identifier">e5</span><span class="Other">,</span> <span class="Identifier">e4</span><span class="Other">,</span> <span class="Identifier">e3</span><span class="Other">,</span> <span class="Identifier">e2</span><span class="Other">,</span> <span class="Identifier">e1</span><span class="Other">,</span> <span class="Identifier">e0</span><span class="Other">:</span> <span class="Identifier">int32</span><span class="Other">)</span><span class="Other">:</span> <a href="mmops.html#Mm"><span class="Identifier">Mm</span></a><span class="Other">[</span><span class="Identifier">w32</span><span class="Other">,</span> <span class="Identifier">int32</span><span class="Other">]</span></pre></dt>
+  <dt><pre><span class="Keyword">template</span> <a href="#set.t%2Cint32%2Cint32%2Cint32%2Cint32%2Cint32%2Cint32%2Cint32%2Cint32"><span class="Identifier">set</span></a><span class="Other">(</span><span class="Identifier">e7</span><span class="Other">,</span> <span class="Identifier">e6</span><span class="Other">,</span> <span class="Identifier">e5</span><span class="Other">,</span> <span class="Identifier">e4</span><span class="Other">,</span> <span class="Identifier">e3</span><span class="Other">,</span> <span class="Identifier">e2</span><span class="Other">,</span> <span class="Identifier">e1</span><span class="Other">,</span> <span class="Identifier">e0</span><span class="Other">:</span> <span class="Identifier">int32</span><span class="Other">)</span><span class="Other">:</span> <a href="mmops.html#Mm"><span class="Identifier">Mm</span></a><span class="Other">[</span><span class="DecNumber">8</span><span class="Other">,</span> <span class="Identifier">int32</span><span class="Other">]</span></pre></dt>
   <dd>
     
-    Set packed 32-bit integer elements with specified values (e7 is highest)
+    Set 8 32-bit integer elements with specified values (e7 is highest)
     
   </dd>
 </div>
 <div id="set.t,uint32,uint32,uint32,uint32,uint32,uint32,uint32,uint32">
-  <dt><pre><span class="Keyword">template</span> <a href="#set.t%2Cuint32%2Cuint32%2Cuint32%2Cuint32%2Cuint32%2Cuint32%2Cuint32%2Cuint32"><span class="Identifier">set</span></a><span class="Other">(</span><span class="Identifier">e7</span><span class="Other">,</span> <span class="Identifier">e6</span><span class="Other">,</span> <span class="Identifier">e5</span><span class="Other">,</span> <span class="Identifier">e4</span><span class="Other">,</span> <span class="Identifier">e3</span><span class="Other">,</span> <span class="Identifier">e2</span><span class="Other">,</span> <span class="Identifier">e1</span><span class="Other">,</span> <span class="Identifier">e0</span><span class="Other">:</span> <span class="Identifier">uint32</span><span class="Other">)</span><span class="Other">:</span> <a href="mmops.html#Mm"><span class="Identifier">Mm</span></a><span class="Other">[</span><span class="Identifier">w32</span><span class="Other">,</span> <span class="Identifier">uint32</span><span class="Other">]</span></pre></dt>
+  <dt><pre><span class="Keyword">template</span> <a href="#set.t%2Cuint32%2Cuint32%2Cuint32%2Cuint32%2Cuint32%2Cuint32%2Cuint32%2Cuint32"><span class="Identifier">set</span></a><span class="Other">(</span><span class="Identifier">e7</span><span class="Other">,</span> <span class="Identifier">e6</span><span class="Other">,</span> <span class="Identifier">e5</span><span class="Other">,</span> <span class="Identifier">e4</span><span class="Other">,</span> <span class="Identifier">e3</span><span class="Other">,</span> <span class="Identifier">e2</span><span class="Other">,</span> <span class="Identifier">e1</span><span class="Other">,</span> <span class="Identifier">e0</span><span class="Other">:</span> <span class="Identifier">uint32</span><span class="Other">)</span><span class="Other">:</span> <a href="mmops.html#Mm"><span class="Identifier">Mm</span></a><span class="Other">[</span><span class="DecNumber">8</span><span class="Other">,</span> <span class="Identifier">uint32</span><span class="Other">]</span></pre></dt>
   <dd>
     
-    Set packed 32-bit unsigned integer elements with specified values (e7 is highest)
+    Set 8 32-bit unsigned integer elements with specified values (e7 is highest)
     
   </dd>
 </div>
 <div id="set.t,int16,int16,int16,int16,int16,int16,int16,int16,int16,int16,int16,int16,int16,int16,int16,int16">
   <dt><pre><span class="Keyword">template</span> <a href="#set.t%2Cint16%2Cint16%2Cint16%2Cint16%2Cint16%2Cint16%2Cint16%2Cint16%2Cint16%2Cint16%2Cint16%2Cint16%2Cint16%2Cint16%2Cint16%2Cint16"><span class="Identifier">set</span></a><span class="Other">(</span><span class="Identifier">e15</span><span class="Other">,</span> <span class="Identifier">e14</span><span class="Other">,</span> <span class="Identifier">e13</span><span class="Other">,</span> <span class="Identifier">e12</span><span class="Other">,</span> <span class="Identifier">e11</span><span class="Other">,</span> <span class="Identifier">e10</span><span class="Other">,</span> <span class="Identifier">e9</span><span class="Other">,</span> <span class="Identifier">e8</span><span class="Other">,</span> <span class="Identifier">e7</span><span class="Other">,</span> <span class="Identifier">e6</span><span class="Other">,</span> <span class="Identifier">e5</span><span class="Other">,</span> <span class="Identifier">e4</span><span class="Other">,</span> <span class="Identifier">e3</span><span class="Other">,</span> <span class="Identifier">e2</span><span class="Other">,</span> <span class="Identifier">e1</span><span class="Other">,</span>
-             <span class="Identifier">e0</span><span class="Other">:</span> <span class="Identifier">int16</span><span class="Other">)</span><span class="Other">:</span> <a href="mmops.html#Mm"><span class="Identifier">Mm</span></a><span class="Other">[</span><span class="Identifier">w16</span><span class="Other">,</span> <span class="Identifier">int16</span><span class="Other">]</span></pre></dt>
+             <span class="Identifier">e0</span><span class="Other">:</span> <span class="Identifier">int16</span><span class="Other">)</span><span class="Other">:</span> <a href="mmops.html#Mm"><span class="Identifier">Mm</span></a><span class="Other">[</span><span class="DecNumber">16</span><span class="Other">,</span> <span class="Identifier">int16</span><span class="Other">]</span></pre></dt>
   <dd>
     
-    Set packed 16-bit integer elements with specified values (e15 is highest)
+    Set 16 16-bit integer elements with specified values (e15 is highest)
     
   </dd>
 </div>
 <div id="set.t,uint16,uint16,uint16,uint16,uint16,uint16,uint16,uint16,uint16,uint16,uint16,uint16,uint16,uint16,uint16,uint16">
   <dt><pre><span class="Keyword">template</span> <a href="#set.t%2Cuint16%2Cuint16%2Cuint16%2Cuint16%2Cuint16%2Cuint16%2Cuint16%2Cuint16%2Cuint16%2Cuint16%2Cuint16%2Cuint16%2Cuint16%2Cuint16%2Cuint16%2Cuint16"><span class="Identifier">set</span></a><span class="Other">(</span><span class="Identifier">e15</span><span class="Other">,</span> <span class="Identifier">e14</span><span class="Other">,</span> <span class="Identifier">e13</span><span class="Other">,</span> <span class="Identifier">e12</span><span class="Other">,</span> <span class="Identifier">e11</span><span class="Other">,</span> <span class="Identifier">e10</span><span class="Other">,</span> <span class="Identifier">e9</span><span class="Other">,</span> <span class="Identifier">e8</span><span class="Other">,</span> <span class="Identifier">e7</span><span class="Other">,</span> <span class="Identifier">e6</span><span class="Other">,</span> <span class="Identifier">e5</span><span class="Other">,</span> <span class="Identifier">e4</span><span class="Other">,</span> <span class="Identifier">e3</span><span class="Other">,</span> <span class="Identifier">e2</span><span class="Other">,</span> <span class="Identifier">e1</span><span class="Other">,</span>
-             <span class="Identifier">e0</span><span class="Other">:</span> <span class="Identifier">uint16</span><span class="Other">)</span><span class="Other">:</span> <a href="mmops.html#Mm"><span class="Identifier">Mm</span></a><span class="Other">[</span><span class="Identifier">w16</span><span class="Other">,</span> <span class="Identifier">uint16</span><span class="Other">]</span></pre></dt>
+             <span class="Identifier">e0</span><span class="Other">:</span> <span class="Identifier">uint16</span><span class="Other">)</span><span class="Other">:</span> <a href="mmops.html#Mm"><span class="Identifier">Mm</span></a><span class="Other">[</span><span class="DecNumber">16</span><span class="Other">,</span> <span class="Identifier">uint16</span><span class="Other">]</span></pre></dt>
   <dd>
     
-    Set packed 16-bit unsigned integer elements with specified values (e15 is highest)
+    Set 16 16-bit unsigned integer elements with specified values (e15 is highest)
     
   </dd>
 </div>
 <div id="set.t,int8,int8,int8,int8,int8,int8,int8,int8,int8,int8,int8,int8,int8,int8,int8,int8,int8,int8,int8,int8,int8,int8,int8,int8,int8,int8,int8,int8,int8,int8,int8,int8">
   <dt><pre><span class="Keyword">template</span> <a href="#set.t%2Cint8%2Cint8%2Cint8%2Cint8%2Cint8%2Cint8%2Cint8%2Cint8%2Cint8%2Cint8%2Cint8%2Cint8%2Cint8%2Cint8%2Cint8%2Cint8%2Cint8%2Cint8%2Cint8%2Cint8%2Cint8%2Cint8%2Cint8%2Cint8%2Cint8%2Cint8%2Cint8%2Cint8%2Cint8%2Cint8%2Cint8%2Cint8"><span class="Identifier">set</span></a><span class="Other">(</span><span class="Identifier">e31</span><span class="Other">,</span> <span class="Identifier">e30</span><span class="Other">,</span> <span class="Identifier">e29</span><span class="Other">,</span> <span class="Identifier">e28</span><span class="Other">,</span> <span class="Identifier">e27</span><span class="Other">,</span> <span class="Identifier">e26</span><span class="Other">,</span> <span class="Identifier">e25</span><span class="Other">,</span> <span class="Identifier">e24</span><span class="Other">,</span> <span class="Identifier">e23</span><span class="Other">,</span> <span class="Identifier">e22</span><span class="Other">,</span> <span class="Identifier">e21</span><span class="Other">,</span> <span class="Identifier">e20</span><span class="Other">,</span> <span class="Identifier">e19</span><span class="Other">,</span>
              <span class="Identifier">e18</span><span class="Other">,</span> <span class="Identifier">e17</span><span class="Other">,</span> <span class="Identifier">e16</span><span class="Other">,</span> <span class="Identifier">e15</span><span class="Other">,</span> <span class="Identifier">e14</span><span class="Other">,</span> <span class="Identifier">e13</span><span class="Other">,</span> <span class="Identifier">e12</span><span class="Other">,</span> <span class="Identifier">e11</span><span class="Other">,</span> <span class="Identifier">e10</span><span class="Other">,</span> <span class="Identifier">e9</span><span class="Other">,</span> <span class="Identifier">e8</span><span class="Other">,</span> <span class="Identifier">e7</span><span class="Other">,</span> <span class="Identifier">e6</span><span class="Other">,</span> <span class="Identifier">e5</span><span class="Other">,</span>
-             <span class="Identifier">e4</span><span class="Other">,</span> <span class="Identifier">e3</span><span class="Other">,</span> <span class="Identifier">e2</span><span class="Other">,</span> <span class="Identifier">e1</span><span class="Other">,</span> <span class="Identifier">e0</span><span class="Other">:</span> <span class="Identifier">int8</span><span class="Other">)</span><span class="Other">:</span> <a href="mmops.html#Mm"><span class="Identifier">Mm</span></a><span class="Other">[</span><span class="Identifier">w8</span><span class="Other">,</span> <span class="Identifier">int8</span><span class="Other">]</span></pre></dt>
+             <span class="Identifier">e4</span><span class="Other">,</span> <span class="Identifier">e3</span><span class="Other">,</span> <span class="Identifier">e2</span><span class="Other">,</span> <span class="Identifier">e1</span><span class="Other">,</span> <span class="Identifier">e0</span><span class="Other">:</span> <span class="Identifier">int8</span><span class="Other">)</span><span class="Other">:</span> <a href="mmops.html#Mm"><span class="Identifier">Mm</span></a><span class="Other">[</span><span class="DecNumber">32</span><span class="Other">,</span> <span class="Identifier">int8</span><span class="Other">]</span></pre></dt>
   <dd>
     
-    Set packed 8-bit integer elements with specified values (e31 is highest)
+    Set 32 8-bit integer elements with specified values (e31 is highest)
     
   </dd>
 </div>
 <div id="set.t,uint8,uint8,uint8,uint8,uint8,uint8,uint8,uint8,uint8,uint8,uint8,uint8,uint8,uint8,uint8,uint8,uint8,uint8,uint8,uint8,uint8,uint8,uint8,uint8,uint8,uint8,uint8,uint8,uint8,uint8,uint8,uint8">
   <dt><pre><span class="Keyword">template</span> <a href="#set.t%2Cuint8%2Cuint8%2Cuint8%2Cuint8%2Cuint8%2Cuint8%2Cuint8%2Cuint8%2Cuint8%2Cuint8%2Cuint8%2Cuint8%2Cuint8%2Cuint8%2Cuint8%2Cuint8%2Cuint8%2Cuint8%2Cuint8%2Cuint8%2Cuint8%2Cuint8%2Cuint8%2Cuint8%2Cuint8%2Cuint8%2Cuint8%2Cuint8%2Cuint8%2Cuint8%2Cuint8%2Cuint8"><span class="Identifier">set</span></a><span class="Other">(</span><span class="Identifier">e31</span><span class="Other">,</span> <span class="Identifier">e30</span><span class="Other">,</span> <span class="Identifier">e29</span><span class="Other">,</span> <span class="Identifier">e28</span><span class="Other">,</span> <span class="Identifier">e27</span><span class="Other">,</span> <span class="Identifier">e26</span><span class="Other">,</span> <span class="Identifier">e25</span><span class="Other">,</span> <span class="Identifier">e24</span><span class="Other">,</span> <span class="Identifier">e23</span><span class="Other">,</span> <span class="Identifier">e22</span><span class="Other">,</span> <span class="Identifier">e21</span><span class="Other">,</span> <span class="Identifier">e20</span><span class="Other">,</span> <span class="Identifier">e19</span><span class="Other">,</span>
              <span class="Identifier">e18</span><span class="Other">,</span> <span class="Identifier">e17</span><span class="Other">,</span> <span class="Identifier">e16</span><span class="Other">,</span> <span class="Identifier">e15</span><span class="Other">,</span> <span class="Identifier">e14</span><span class="Other">,</span> <span class="Identifier">e13</span><span class="Other">,</span> <span class="Identifier">e12</span><span class="Other">,</span> <span class="Identifier">e11</span><span class="Other">,</span> <span class="Identifier">e10</span><span class="Other">,</span> <span class="Identifier">e9</span><span class="Other">,</span> <span class="Identifier">e8</span><span class="Other">,</span> <span class="Identifier">e7</span><span class="Other">,</span> <span class="Identifier">e6</span><span class="Other">,</span> <span class="Identifier">e5</span><span class="Other">,</span>
-             <span class="Identifier">e4</span><span class="Other">,</span> <span class="Identifier">e3</span><span class="Other">,</span> <span class="Identifier">e2</span><span class="Other">,</span> <span class="Identifier">e1</span><span class="Other">,</span> <span class="Identifier">e0</span><span class="Other">:</span> <span class="Identifier">uint8</span><span class="Other">)</span><span class="Other">:</span> <a href="mmops.html#Mm"><span class="Identifier">Mm</span></a><span class="Other">[</span><span class="Identifier">w8</span><span class="Other">,</span> <span class="Identifier">uint8</span><span class="Other">]</span></pre></dt>
+             <span class="Identifier">e4</span><span class="Other">,</span> <span class="Identifier">e3</span><span class="Other">,</span> <span class="Identifier">e2</span><span class="Other">,</span> <span class="Identifier">e1</span><span class="Other">,</span> <span class="Identifier">e0</span><span class="Other">:</span> <span class="Identifier">uint8</span><span class="Other">)</span><span class="Other">:</span> <a href="mmops.html#Mm"><span class="Identifier">Mm</span></a><span class="Other">[</span><span class="DecNumber">32</span><span class="Other">,</span> <span class="Identifier">uint8</span><span class="Other">]</span></pre></dt>
   <dd>
     
-    Set packed 8-bit unsigned integer elements with specified values (e31 is highest)
+    Set 32 8-bit unsigned integer elements with specified values (e31 is highest)
     
   </dd>
 </div>
@@ -1496,35 +1492,35 @@ else:
 
 </div>
 <div id="store-templates-all">
-  <div id="store.t,Mm[Width,T]_4">
-  <dt><pre><span class="Keyword">template</span> <a href="#store.t%2CMm%5BWidth%2CT%5D_4"><span class="Identifier">store</span></a><span class="Other">[</span><span class="Identifier">T</span><span class="Other">]</span><span class="Other">(</span><span class="Identifier">m</span><span class="Other">:</span> <a href="mmops.html#Mm"><span class="Identifier">Mm</span></a><span class="Other">[</span><span class="Identifier">w8</span><span class="Other">,</span> <span class="Identifier">T</span><span class="Other">]</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">array</span><span class="Other">[</span><span class="DecNumber">32</span><span class="Other">,</span> <span class="Identifier">T</span><span class="Other">]</span></pre></dt>
+  <div id="store.t,Mm[,T]_2">
+  <dt><pre><span class="Keyword">template</span> <a href="#store.t%2CMm%5B%2CT%5D_2"><span class="Identifier">store</span></a><span class="Other">[</span><span class="Identifier">T</span><span class="Other">]</span><span class="Other">(</span><span class="Identifier">m</span><span class="Other">:</span> <a href="mmops.html#Mm"><span class="Identifier">Mm</span></a><span class="Other">[</span><span class="DecNumber">4</span><span class="Other">,</span> <span class="Identifier">T</span><span class="Other">]</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">array</span><span class="Other">[</span><span class="DecNumber">4</span><span class="Other">,</span> <span class="Identifier">T</span><span class="Other">]</span></pre></dt>
   <dd>
     
-    Store Mm vector to array (8-bit elements)
+    Store Mm vector to array (4 elements)
     
   </dd>
 </div>
-<div id="store.t,Mm[Width,T]_3">
-  <dt><pre><span class="Keyword">template</span> <a href="#store.t%2CMm%5BWidth%2CT%5D_3"><span class="Identifier">store</span></a><span class="Other">[</span><span class="Identifier">T</span><span class="Other">]</span><span class="Other">(</span><span class="Identifier">m</span><span class="Other">:</span> <a href="mmops.html#Mm"><span class="Identifier">Mm</span></a><span class="Other">[</span><span class="Identifier">w16</span><span class="Other">,</span> <span class="Identifier">T</span><span class="Other">]</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">array</span><span class="Other">[</span><span class="DecNumber">16</span><span class="Other">,</span> <span class="Identifier">T</span><span class="Other">]</span></pre></dt>
+<div id="store.t,Mm[,T]">
+  <dt><pre><span class="Keyword">template</span> <a href="#store.t%2CMm%5B%2CT%5D"><span class="Identifier">store</span></a><span class="Other">[</span><span class="Identifier">T</span><span class="Other">]</span><span class="Other">(</span><span class="Identifier">m</span><span class="Other">:</span> <a href="mmops.html#Mm"><span class="Identifier">Mm</span></a><span class="Other">[</span><span class="DecNumber">8</span><span class="Other">,</span> <span class="Identifier">T</span><span class="Other">]</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">array</span><span class="Other">[</span><span class="DecNumber">8</span><span class="Other">,</span> <span class="Identifier">T</span><span class="Other">]</span></pre></dt>
   <dd>
     
-    Store Mm vector to array (16-bit elements)
+    Store Mm vector to array (8 elements)
     
   </dd>
 </div>
-<div id="store.t,Mm[Width,T]">
-  <dt><pre><span class="Keyword">template</span> <a href="#store.t%2CMm%5BWidth%2CT%5D"><span class="Identifier">store</span></a><span class="Other">[</span><span class="Identifier">T</span><span class="Other">]</span><span class="Other">(</span><span class="Identifier">m</span><span class="Other">:</span> <a href="mmops.html#Mm"><span class="Identifier">Mm</span></a><span class="Other">[</span><span class="Identifier">w32</span><span class="Other">,</span> <span class="Identifier">T</span><span class="Other">]</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">array</span><span class="Other">[</span><span class="DecNumber">8</span><span class="Other">,</span> <span class="Identifier">T</span><span class="Other">]</span></pre></dt>
+<div id="store.t,Mm[,T]_3">
+  <dt><pre><span class="Keyword">template</span> <a href="#store.t%2CMm%5B%2CT%5D_3"><span class="Identifier">store</span></a><span class="Other">[</span><span class="Identifier">T</span><span class="Other">]</span><span class="Other">(</span><span class="Identifier">m</span><span class="Other">:</span> <a href="mmops.html#Mm"><span class="Identifier">Mm</span></a><span class="Other">[</span><span class="DecNumber">16</span><span class="Other">,</span> <span class="Identifier">T</span><span class="Other">]</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">array</span><span class="Other">[</span><span class="DecNumber">16</span><span class="Other">,</span> <span class="Identifier">T</span><span class="Other">]</span></pre></dt>
   <dd>
     
-    Store Mm vector to array (32-bit elements)
+    Store Mm vector to array (16 elements)
     
   </dd>
 </div>
-<div id="store.t,Mm[Width,T]_2">
-  <dt><pre><span class="Keyword">template</span> <a href="#store.t%2CMm%5BWidth%2CT%5D_2"><span class="Identifier">store</span></a><span class="Other">[</span><span class="Identifier">T</span><span class="Other">]</span><span class="Other">(</span><span class="Identifier">m</span><span class="Other">:</span> <a href="mmops.html#Mm"><span class="Identifier">Mm</span></a><span class="Other">[</span><span class="Identifier">w64</span><span class="Other">,</span> <span class="Identifier">T</span><span class="Other">]</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">array</span><span class="Other">[</span><span class="DecNumber">4</span><span class="Other">,</span> <span class="Identifier">T</span><span class="Other">]</span></pre></dt>
+<div id="store.t,Mm[,T]_4">
+  <dt><pre><span class="Keyword">template</span> <a href="#store.t%2CMm%5B%2CT%5D_4"><span class="Identifier">store</span></a><span class="Other">[</span><span class="Identifier">T</span><span class="Other">]</span><span class="Other">(</span><span class="Identifier">m</span><span class="Other">:</span> <a href="mmops.html#Mm"><span class="Identifier">Mm</span></a><span class="Other">[</span><span class="DecNumber">32</span><span class="Other">,</span> <span class="Identifier">T</span><span class="Other">]</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">array</span><span class="Other">[</span><span class="DecNumber">32</span><span class="Other">,</span> <span class="Identifier">T</span><span class="Other">]</span></pre></dt>
   <dd>
     
-    Store Mm vector to array (64-bit elements)
+    Store Mm vector to array (32 elements)
     
   </dd>
 </div>
@@ -1532,7 +1528,7 @@ else:
 </div>
 <div id="streamLoad-templates-all">
   <div id="streamLoad.t,array[,T]">
-  <dt><pre><span class="Keyword">template</span> <a href="#streamLoad.t%2Carray%5B%2CT%5D"><span class="Identifier">streamLoad</span></a><span class="Other">[</span><span class="Identifier">T</span><span class="Other">]</span><span class="Other">(</span><span class="Identifier">p</span><span class="Other">:</span> <span class="Identifier">array</span><span class="Other">[</span><span class="DecNumber">8</span><span class="Other">,</span> <span class="Identifier">T</span><span class="Other">]</span><span class="Other">)</span><span class="Other">:</span> <a href="mmops.html#Mm"><span class="Identifier">Mm</span></a><span class="Other">[</span><span class="Identifier">w32</span><span class="Other">,</span> <span class="Identifier">T</span><span class="Other">]</span></pre></dt>
+  <dt><pre><span class="Keyword">template</span> <a href="#streamLoad.t%2Carray%5B%2CT%5D"><span class="Identifier">streamLoad</span></a><span class="Other">[</span><span class="Identifier">T</span><span class="Other">]</span><span class="Other">(</span><span class="Identifier">p</span><span class="Other">:</span> <span class="Identifier">array</span><span class="Other">[</span><span class="DecNumber">8</span><span class="Other">,</span> <span class="Identifier">T</span><span class="Other">]</span><span class="Other">)</span><span class="Other">:</span> <a href="mmops.html#Mm"><span class="Identifier">Mm</span></a><span class="Other">[</span><span class="DecNumber">8</span><span class="Other">,</span> <span class="Identifier">T</span><span class="Other">]</span></pre></dt>
   <dd>
     
     Load data from memory using non-temporal memory hint
@@ -1553,32 +1549,32 @@ else:
 
 </div>
 <div id="toArray-templates-all">
-  <div id="toArray.t,Mm[Width,T]">
-  <dt><pre><span class="Keyword">template</span> <a href="#toArray.t%2CMm%5BWidth%2CT%5D"><span class="Identifier">toArray</span></a><span class="Other">[</span><span class="Identifier">T</span><span class="Other">]</span><span class="Other">(</span><span class="Identifier">m</span><span class="Other">:</span> <a href="mmops.html#Mm"><span class="Identifier">Mm</span></a><span class="Other">[</span><span class="Identifier">w8</span><span class="Other">,</span> <span class="Identifier">T</span><span class="Other">]</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">array</span><span class="Other">[</span><span class="DecNumber">32</span><span class="Other">,</span> <span class="Identifier">T</span><span class="Other">]</span></pre></dt>
+  <div id="toArray.t,Mm[,T]_4">
+  <dt><pre><span class="Keyword">template</span> <a href="#toArray.t%2CMm%5B%2CT%5D_4"><span class="Identifier">toArray</span></a><span class="Other">[</span><span class="Identifier">T</span><span class="Other">]</span><span class="Other">(</span><span class="Identifier">m</span><span class="Other">:</span> <a href="mmops.html#Mm"><span class="Identifier">Mm</span></a><span class="Other">[</span><span class="DecNumber">4</span><span class="Other">,</span> <span class="Identifier">T</span><span class="Other">]</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">array</span><span class="Other">[</span><span class="DecNumber">4</span><span class="Other">,</span> <span class="Identifier">T</span><span class="Other">]</span></pre></dt>
   <dd>
     
     
     
   </dd>
 </div>
-<div id="toArray.t,Mm[Width,T]_2">
-  <dt><pre><span class="Keyword">template</span> <a href="#toArray.t%2CMm%5BWidth%2CT%5D_2"><span class="Identifier">toArray</span></a><span class="Other">[</span><span class="Identifier">T</span><span class="Other">]</span><span class="Other">(</span><span class="Identifier">m</span><span class="Other">:</span> <a href="mmops.html#Mm"><span class="Identifier">Mm</span></a><span class="Other">[</span><span class="Identifier">w16</span><span class="Other">,</span> <span class="Identifier">T</span><span class="Other">]</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">array</span><span class="Other">[</span><span class="DecNumber">16</span><span class="Other">,</span> <span class="Identifier">T</span><span class="Other">]</span></pre></dt>
+<div id="toArray.t,Mm[,T]_3">
+  <dt><pre><span class="Keyword">template</span> <a href="#toArray.t%2CMm%5B%2CT%5D_3"><span class="Identifier">toArray</span></a><span class="Other">[</span><span class="Identifier">T</span><span class="Other">]</span><span class="Other">(</span><span class="Identifier">m</span><span class="Other">:</span> <a href="mmops.html#Mm"><span class="Identifier">Mm</span></a><span class="Other">[</span><span class="DecNumber">8</span><span class="Other">,</span> <span class="Identifier">T</span><span class="Other">]</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">array</span><span class="Other">[</span><span class="DecNumber">8</span><span class="Other">,</span> <span class="Identifier">T</span><span class="Other">]</span></pre></dt>
   <dd>
     
     
     
   </dd>
 </div>
-<div id="toArray.t,Mm[Width,T]_3">
-  <dt><pre><span class="Keyword">template</span> <a href="#toArray.t%2CMm%5BWidth%2CT%5D_3"><span class="Identifier">toArray</span></a><span class="Other">[</span><span class="Identifier">T</span><span class="Other">]</span><span class="Other">(</span><span class="Identifier">m</span><span class="Other">:</span> <a href="mmops.html#Mm"><span class="Identifier">Mm</span></a><span class="Other">[</span><span class="Identifier">w32</span><span class="Other">,</span> <span class="Identifier">T</span><span class="Other">]</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">array</span><span class="Other">[</span><span class="DecNumber">8</span><span class="Other">,</span> <span class="Identifier">T</span><span class="Other">]</span></pre></dt>
+<div id="toArray.t,Mm[,T]_2">
+  <dt><pre><span class="Keyword">template</span> <a href="#toArray.t%2CMm%5B%2CT%5D_2"><span class="Identifier">toArray</span></a><span class="Other">[</span><span class="Identifier">T</span><span class="Other">]</span><span class="Other">(</span><span class="Identifier">m</span><span class="Other">:</span> <a href="mmops.html#Mm"><span class="Identifier">Mm</span></a><span class="Other">[</span><span class="DecNumber">16</span><span class="Other">,</span> <span class="Identifier">T</span><span class="Other">]</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">array</span><span class="Other">[</span><span class="DecNumber">16</span><span class="Other">,</span> <span class="Identifier">T</span><span class="Other">]</span></pre></dt>
   <dd>
     
     
     
   </dd>
 </div>
-<div id="toArray.t,Mm[Width,T]_4">
-  <dt><pre><span class="Keyword">template</span> <a href="#toArray.t%2CMm%5BWidth%2CT%5D_4"><span class="Identifier">toArray</span></a><span class="Other">[</span><span class="Identifier">T</span><span class="Other">]</span><span class="Other">(</span><span class="Identifier">m</span><span class="Other">:</span> <a href="mmops.html#Mm"><span class="Identifier">Mm</span></a><span class="Other">[</span><span class="Identifier">w64</span><span class="Other">,</span> <span class="Identifier">T</span><span class="Other">]</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">array</span><span class="Other">[</span><span class="DecNumber">4</span><span class="Other">,</span> <span class="Identifier">T</span><span class="Other">]</span></pre></dt>
+<div id="toArray.t,Mm[,T]">
+  <dt><pre><span class="Keyword">template</span> <a href="#toArray.t%2CMm%5B%2CT%5D"><span class="Identifier">toArray</span></a><span class="Other">[</span><span class="Identifier">T</span><span class="Other">]</span><span class="Other">(</span><span class="Identifier">m</span><span class="Other">:</span> <a href="mmops.html#Mm"><span class="Identifier">Mm</span></a><span class="Other">[</span><span class="DecNumber">32</span><span class="Other">,</span> <span class="Identifier">T</span><span class="Other">]</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">array</span><span class="Other">[</span><span class="DecNumber">32</span><span class="Other">,</span> <span class="Identifier">T</span><span class="Other">]</span></pre></dt>
   <dd>
     
     
@@ -1589,7 +1585,7 @@ else:
 </div>
 <div id="toMm-templates-all">
   <div id="toMm.t,array[,T]_4">
-  <dt><pre><span class="Keyword">template</span> <a href="#toMm.t%2Carray%5B%2CT%5D_4"><span class="Identifier">toMm</span></a><span class="Other">[</span><span class="Identifier">T</span><span class="Other">]</span><span class="Other">(</span><span class="Identifier">p</span><span class="Other">:</span> <span class="Identifier">array</span><span class="Other">[</span><span class="DecNumber">4</span><span class="Other">,</span> <span class="Identifier">T</span><span class="Other">]</span><span class="Other">)</span><span class="Other">:</span> <a href="mmops.html#Mm"><span class="Identifier">Mm</span></a><span class="Other">[</span><span class="Identifier">w64</span><span class="Other">,</span> <span class="Identifier">T</span><span class="Other">]</span></pre></dt>
+  <dt><pre><span class="Keyword">template</span> <a href="#toMm.t%2Carray%5B%2CT%5D_4"><span class="Identifier">toMm</span></a><span class="Other">[</span><span class="Identifier">T</span><span class="Other">]</span><span class="Other">(</span><span class="Identifier">p</span><span class="Other">:</span> <span class="Identifier">array</span><span class="Other">[</span><span class="DecNumber">4</span><span class="Other">,</span> <span class="Identifier">T</span><span class="Other">]</span><span class="Other">)</span><span class="Other">:</span> <a href="mmops.html#Mm"><span class="Identifier">Mm</span></a><span class="Other">[</span><span class="DecNumber">4</span><span class="Other">,</span> <span class="Identifier">T</span><span class="Other">]</span></pre></dt>
   <dd>
     
     
@@ -1597,7 +1593,7 @@ else:
   </dd>
 </div>
 <div id="toMm.t,array[,T]_3">
-  <dt><pre><span class="Keyword">template</span> <a href="#toMm.t%2Carray%5B%2CT%5D_3"><span class="Identifier">toMm</span></a><span class="Other">[</span><span class="Identifier">T</span><span class="Other">]</span><span class="Other">(</span><span class="Identifier">p</span><span class="Other">:</span> <span class="Identifier">array</span><span class="Other">[</span><span class="DecNumber">8</span><span class="Other">,</span> <span class="Identifier">T</span><span class="Other">]</span><span class="Other">)</span><span class="Other">:</span> <a href="mmops.html#Mm"><span class="Identifier">Mm</span></a><span class="Other">[</span><span class="Identifier">w32</span><span class="Other">,</span> <span class="Identifier">T</span><span class="Other">]</span></pre></dt>
+  <dt><pre><span class="Keyword">template</span> <a href="#toMm.t%2Carray%5B%2CT%5D_3"><span class="Identifier">toMm</span></a><span class="Other">[</span><span class="Identifier">T</span><span class="Other">]</span><span class="Other">(</span><span class="Identifier">p</span><span class="Other">:</span> <span class="Identifier">array</span><span class="Other">[</span><span class="DecNumber">8</span><span class="Other">,</span> <span class="Identifier">T</span><span class="Other">]</span><span class="Other">)</span><span class="Other">:</span> <a href="mmops.html#Mm"><span class="Identifier">Mm</span></a><span class="Other">[</span><span class="DecNumber">8</span><span class="Other">,</span> <span class="Identifier">T</span><span class="Other">]</span></pre></dt>
   <dd>
     
     
@@ -1605,7 +1601,7 @@ else:
   </dd>
 </div>
 <div id="toMm.t,array[,T]_2">
-  <dt><pre><span class="Keyword">template</span> <a href="#toMm.t%2Carray%5B%2CT%5D_2"><span class="Identifier">toMm</span></a><span class="Other">[</span><span class="Identifier">T</span><span class="Other">]</span><span class="Other">(</span><span class="Identifier">p</span><span class="Other">:</span> <span class="Identifier">array</span><span class="Other">[</span><span class="DecNumber">16</span><span class="Other">,</span> <span class="Identifier">T</span><span class="Other">]</span><span class="Other">)</span><span class="Other">:</span> <a href="mmops.html#Mm"><span class="Identifier">Mm</span></a><span class="Other">[</span><span class="Identifier">w16</span><span class="Other">,</span> <span class="Identifier">T</span><span class="Other">]</span></pre></dt>
+  <dt><pre><span class="Keyword">template</span> <a href="#toMm.t%2Carray%5B%2CT%5D_2"><span class="Identifier">toMm</span></a><span class="Other">[</span><span class="Identifier">T</span><span class="Other">]</span><span class="Other">(</span><span class="Identifier">p</span><span class="Other">:</span> <span class="Identifier">array</span><span class="Other">[</span><span class="DecNumber">16</span><span class="Other">,</span> <span class="Identifier">T</span><span class="Other">]</span><span class="Other">)</span><span class="Other">:</span> <a href="mmops.html#Mm"><span class="Identifier">Mm</span></a><span class="Other">[</span><span class="DecNumber">16</span><span class="Other">,</span> <span class="Identifier">T</span><span class="Other">]</span></pre></dt>
   <dd>
     
     
@@ -1613,7 +1609,7 @@ else:
   </dd>
 </div>
 <div id="toMm.t,array[,T]">
-  <dt><pre><span class="Keyword">template</span> <a href="#toMm.t%2Carray%5B%2CT%5D"><span class="Identifier">toMm</span></a><span class="Other">[</span><span class="Identifier">T</span><span class="Other">]</span><span class="Other">(</span><span class="Identifier">p</span><span class="Other">:</span> <span class="Identifier">array</span><span class="Other">[</span><span class="DecNumber">32</span><span class="Other">,</span> <span class="Identifier">T</span><span class="Other">]</span><span class="Other">)</span><span class="Other">:</span> <a href="mmops.html#Mm"><span class="Identifier">Mm</span></a><span class="Other">[</span><span class="Identifier">w8</span><span class="Other">,</span> <span class="Identifier">T</span><span class="Other">]</span></pre></dt>
+  <dt><pre><span class="Keyword">template</span> <a href="#toMm.t%2Carray%5B%2CT%5D"><span class="Identifier">toMm</span></a><span class="Other">[</span><span class="Identifier">T</span><span class="Other">]</span><span class="Other">(</span><span class="Identifier">p</span><span class="Other">:</span> <span class="Identifier">array</span><span class="Other">[</span><span class="DecNumber">32</span><span class="Other">,</span> <span class="Identifier">T</span><span class="Other">]</span><span class="Other">)</span><span class="Other">:</span> <a href="mmops.html#Mm"><span class="Identifier">Mm</span></a><span class="Other">[</span><span class="DecNumber">32</span><span class="Other">,</span> <span class="Identifier">T</span><span class="Other">]</span></pre></dt>
   <dd>
     
     
@@ -1698,7 +1694,7 @@ else:
       <div class="twelve-columns footer">
         <span class="nim-sprite"></span>
         <br>
-        <small style="color: var(--hint);">Made with Nim. Generated: 2025-08-03 19:30:35 UTC</small>
+        <small style="color: var(--hint);">Made with Nim. Generated: 2025-08-05 15:12:46 UTC</small>
       </div>
     </div>
   </div>

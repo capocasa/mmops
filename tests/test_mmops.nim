@@ -33,28 +33,28 @@ suite "mmops - Multimedia Operators Test Suite":
 
   suite "Vector Initialization":
     test "splat operations":
-      let v_f32 = splat[w32](5.0'f32)
+      let v_f32 = splat[8](5.0'f32)
       let expected_f32 = [5.0'f32, 5.0, 5.0, 5.0, 5.0, 5.0, 5.0, 5.0]
       checkArrayEqual(store(v_f32), expected_f32)
 
-      let v_f64 = splat[w64](10.0'f64)
+      let v_f64 = splat[4](10.0'f64)
       let expected_f64 = [10.0'f64, 10.0, 10.0, 10.0]
       checkArrayEqual(store(v_f64), expected_f64)
 
-      let v_i32 = splat[w32](7'i32)
+      let v_i32 = splat[8](7'i32)
       let expected_i32 = [7'i32, 7, 7, 7, 7, 7, 7, 7]
       checkArrayEqual(store(v_i32), expected_i32)
 
     test "zero initialization":
-      let zeros_f32 = zero(Mm[w32, float32])
+      let zeros_f32 = zero(Mm[8, float32])
       let expected_f32 = [0.0'f32, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]
       checkArrayEqual(store(zeros_f32), expected_f32)
 
-      let zeros_f64 = zero(Mm[w64, float64])
+      let zeros_f64 = zero(Mm[4, float64])
       let expected_f64 = [0.0'f64, 0.0, 0.0, 0.0]
       checkArrayEqual(store(zeros_f64), expected_f64)
 
-      let zeros_i32 = zero(Mm[w32, int32])
+      let zeros_i32 = zero(Mm[8, int32])
       let expected_i32 = [0'i32, 0, 0, 0, 0, 0, 0, 0]
       checkArrayEqual(store(zeros_i32), expected_i32)
 
@@ -111,13 +111,13 @@ suite "mmops - Multimedia Operators Test Suite":
 
     test "division":
       let a = load([8.0'f32, 12.0, 16.0, 20.0, 24.0, 28.0, 32.0, 36.0])
-      let b = splat[w32](4.0'f32)
+      let b = splat[8](4.0'f32)
       let result = a / b
       let expected = [2.0'f32, 3.0, 4.0, 5.0, 6.0, 7.0, 8.0, 9.0]
       checkArrayEqual(store(result), expected)
 
     test "fused multiply-add (fma)":
-      let c_f32 = splat[w32](1.0'f32)
+      let c_f32 = splat[8](1.0'f32)
       let result = fma(a_f32, b_f32, c_f32)
       let expected = [9.0'f32, 15.0, 19.0, 21.0, 21.0, 19.0, 15.0, 9.0]
       checkArrayEqual(store(result), expected)
@@ -144,21 +144,21 @@ suite "mmops - Multimedia Operators Test Suite":
   suite "Extended Integer Types":
     test "8-bit integer operations":
       let a8 = load([1'i8, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32])
-      let b8 = splat[w8](2'i8)
+      let b8 = splat[32](2'i8)
       let result = a8 + b8
       let expected = [3'i8, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34]
       checkArrayEqual(store(result), expected)
 
     test "16-bit integer operations":
       let a16 = load([100'i16, 200, 300, 400, 500, 600, 700, 800, 900, 1000, 1100, 1200, 1300, 1400, 1500, 1600])
-      let b16 = splat[w16](50'i16)
+      let b16 = splat[16](50'i16)
       let result = a16 * b16
       let expected = [5000'i16, 10000, 15000, 20000, 25000, 30000, -30536, -25536, -20536, -15536, -10536, -5536, -536, 4464, 9464, 14464]
       checkArrayEqual(store(result), expected)
 
     test "unsigned integer operations":
       let ua8 = load([100'u8, 200, 50, 255, 10, 128, 75, 180, 25, 240, 60, 150, 90, 210, 35, 175, 80, 220, 45, 160, 95, 230, 55, 185, 70, 200, 40, 165, 85, 225, 50, 190])
-      let ub8 = splat[w8](150'u8)
+      let ub8 = splat[32](150'u8)
       let min_result = min(ua8, ub8)
       let max_result = max(ua8, ub8)
       
@@ -280,7 +280,7 @@ suite "mmops - Multimedia Operators Test Suite":
       let expected = [1.0'f32, 2.0, 3.0, 4.0, 5.0, 6.0, 7.0, 8.0]  # Stored as low to high
       checkArrayEqual(store(init_f32), expected)
 
-      let zero_init = initMm(Mm[w32, float32])
+      let zero_init = initMm(Mm[8, float32])
       let expected_zero = [0.0'f32, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]
       checkArrayEqual(store(zero_init), expected_zero)
 
