@@ -70,7 +70,7 @@ echo $output
 
 ## Documentation
 
-For complete API reference, see: [Full documentation](https://capocasa.github.com/mmops/mmops.html)
+For complete API reference, see: [Full documentation](https://capocasa.github.io/mmops/mmops.html)
 
 ## Requirements
 
