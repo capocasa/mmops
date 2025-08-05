@@ -1,10 +1,16 @@
 # mmops - easy SIMD for Nim
 
-mmops is a very thin (only template and aliases) type-safe wrapper for nimsimd.
+mmops is a very thin type-safe convenience wrapper for nimsimd.
 
-The interface handles fixed-size array. To perform calculation, math operators (`+`, `-`, `*`, `/`, etc.) or very simple procedure names are used, which are applied to all elements.
+The YMM-registers used in AVX and AVX2 instructions are presented using the `Mm[N, T]` object with an interface similar to a fixed size array with additional vector math operators.
 
-The 
+Only aliases and templates are used- the functionality and performance maps exactly to `nimsimsd`. It's just easier to read- and to translate normal arithmetic.
+
+## Installation
+
+```
+$ nimble install mmops
+```
 
 ## Usage
 
