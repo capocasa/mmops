@@ -18,7 +18,7 @@ $ nimble install mmops
 import mmops
 
 # Load data into register from array
-let a = load([1.0f, 2.0f, 3.0f, 4.0f, 5.0f, 6.0f, 7.0f, 8.0f])
+let a = [1.0f, 2.0f, 3.0f, 4.0f, 5.0f, 6.0f, 7.0f, 8.0f].toMm
 
 # load data into register from individual values
 let b = set(8.0f, 7.0f, 6.0f, 5.0f, 4.0f, 3.0f, 2.0f, 1.0f)
@@ -33,8 +33,7 @@ var ma = fma(a, b, sum)  # a * b + sum
 echo ma[0]  # Access individual elements
 ma[0] = 42.0f  # Modify elements
 
-# Convert back to array
-let output = store(ma)
+let output = ma.toArray
 
 echo $output
 ```
