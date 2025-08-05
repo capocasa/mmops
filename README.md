@@ -15,20 +15,22 @@ import mmops
 let a = load([1.0f, 2.0f, 3.0f, 4.0f, 5.0f, 6.0f, 7.0f, 8.0f])
 
 # load data into register from individual values
-let b = load(8.0f, 7.0f, 6.0f, 5.0f, 4.0f, 3.0f, 2.0f, 1.0f)
+let b = set(8.0f, 7.0f, 6.0f, 5.0f, 4.0f, 3.0f, 2.0f, 1.0f)
 
 # Perform SIMD operations
 let sum = a + b
 let product = a * b
-let result = fma(a, b, sum)  # a * b + sum
+var ma = fma(a, b, sum)  # a * b + sum
 
 # Array-style access
 # caution, poor performance
-echo result[0]  # Access individual elements
-result[0] = 42.0f  # Modify elements
+echo ma[0]  # Access individual elements
+ma[0] = 42.0f  # Modify elements
 
 # Convert back to array
-let output = store(result)
+let output = store(ma)
+
+echo $output
 ```
 
 ## Basics
@@ -73,12 +75,17 @@ For complete API reference, see: [Full documentation](https://capocasa.github.co
 
 ## Internals
 
-This library was created with a tightly controlled LLM.
+This is an AI-assisted project- the design is human, the implementation is pretty much iterative AI-human teamwork.
 
 ## Limitations
 
 This is currently AVX2 only, so no raspberry pi or native macs- yet.
 
+## Future
+
+I would very much like to add an 128-bit Neon version. One could emulate 256-bit Neon if feeling *really* fancy.
+
 ## License
 
-Licensed under MIT licencse
+mmops is under the MIT license. Please do get rich with it, if you can.
+
