@@ -9,21 +9,21 @@ import ../src/mmops
 
 # --- Helper procedures for testing ---
 
-proc approxEqual(a, b: float32, tol = 1e-6): bool =
+template approxEqual(a, b: float32, tol = 1e-6): bool =
   abs(a - b) < tol
 
-proc approxEqual(a, b: float64, tol = 1e-9): bool =
+template approxEqual(a, b: float64, tol = 1e-9): bool =
   abs(a - b) < tol
 
-proc checkArrayEqual[T](a, b: openArray[T], tol = 1e-6) =
+template checkArrayEqual[T](a, b: openArray[T], tol = 1e-6) =
   check a.len == b.len
   for i in 0..<a.len:
-    when T is float32 or T is float64:
+    when T is SomeFloat:
       check approxEqual(a[i], b[i], tol)
     else:
       check a[i] == b[i]
 
-proc checkApprox[T](actual, expected: T, tol = 1e-6) =
+template checkApprox[T](actual, expected: T, tol = 1e-6) =
   when T is float32 or T is float64:
     check approxEqual(actual, expected, tol)
   else:
