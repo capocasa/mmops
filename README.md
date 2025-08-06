@@ -90,6 +90,15 @@ This is currently AVX2 only, so no raspberry pi or native macs- yet.
 
 I would very much like to add an 128-bit Neon version. One could emulate 256-bit Neon if feeling *really* fancy.
 
+## Changelog
+
+```
+0.1.1  Fix type restriction
+       Simplify splat
+       Fix test helper error masking
+0.1    Initial release
+```
+
 ## License
 
 mmops is under the MIT license. Please do get rich with it, if you can.
