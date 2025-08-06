@@ -20,7 +20,9 @@ const
 # --- Type System ---
 type 
   Mm*[N: static[int], T: SomeNumber] = distinct (
-    when T is float32: M256
+    when N * sizeof(T) != 32:
+      {.error "mmops internal error, N * sizeof(T) must be 32. Hint: use type inference to always get the right type".}
+    elif T is float32: M256
     elif T is float64: M256d
     else: M256i
   )
