@@ -100,9 +100,9 @@ template splat*(val: int16): Mm[16, int16] =
   ## Broadcast a 16-bit integer value to all elements
   Mm[16, int16](mm256_set1_epi16(val))
 
-template splat*(val: int32): Mm[4, int32] = 
+template splat*(val: int32): Mm[8, int32] = 
   ## Broadcast a 32-bit integer value to all elements
-  Mm[4, int32](mm256_set1_epi32(val))
+  Mm[8, int32](mm256_set1_epi32(val))
 
 template splat*(val: int64): Mm[4, int64] = 
   ## Broadcast a 64-bit integer value to all elements
