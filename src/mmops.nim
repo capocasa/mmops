@@ -19,15 +19,10 @@ const
 
 # --- Type System ---
 type 
-  Width* = static[int]  ## Number of elements in SIMD vector (4, 8, 16, or 32)
-
-  Mm*[N: Width, T: SomeNumber] = distinct (
-    when N in [4, 8, 16, 32]:
-      when T is float32: M256 
-      elif T is float64: M256d 
-      else: M256i
-    else:
-      {.error: "Width must be 4, 8, 16, or 32".}
+  Mm*[N: static[int], T: SomeNumber] = distinct (
+    when T is float32: M256
+    elif T is float64: M256d
+    else: M256i
   )
 
 
@@ -87,45 +82,45 @@ template store*[T](m: Mm[32, T]): array[32, T] =
   result
 
 # --- Vector Initialization ---
-template splat*[N](val: float32): Mm[N, float32] = 
+template splat*(val: float32): Mm[8, float32] = 
   ## Broadcast a single-precision floating-point value to all elements
-  Mm[N, float32](mm256_set1_ps(val))
+  Mm[8, float32](mm256_set1_ps(val))
 
-template splat*[N](val: float64): Mm[N, float64] = 
+template splat*(val: float64): Mm[4, float64] = 
   ## Broadcast a double-precision floating-point value to all elements
-  Mm[N, float64](mm256_set1_pd(val))
+  Mm[4, float64](mm256_set1_pd(val))
 
-template splat*[N](val: int8): Mm[N, int8] = 
+template splat*(val: int8): Mm[32, int8] = 
   ## Broadcast an 8-bit integer value to all elements
-  Mm[N, int8](mm256_set1_epi8(val))
+  Mm[32, int8](mm256_set1_epi8(val))
 
-template splat*[N](val: int16): Mm[N, int16] = 
+template splat*(val: int16): Mm[16, int16] = 
   ## Broadcast a 16-bit integer value to all elements
-  Mm[N, int16](mm256_set1_epi16(val))
+  Mm[16, int16](mm256_set1_epi16(val))
 
-template splat*[N](val: int32): Mm[N, int32] = 
+template splat*(val: int32): Mm[4, int32] = 
   ## Broadcast a 32-bit integer value to all elements
-  Mm[N, int32](mm256_set1_epi32(val))
+  Mm[4, int32](mm256_set1_epi32(val))
 
-template splat*[N](val: int64): Mm[N, int64] = 
+template splat*(val: int64): Mm[4, int64] = 
   ## Broadcast a 64-bit integer value to all elements
-  Mm[N, int64](mm256_set1_epi64x(val))
+  Mm[4, int64](mm256_set1_epi64x(val))
 
-template splat*[N](val: uint8): Mm[N, uint8] = 
+template splat*(val: uint8): Mm[32, uint8] = 
   ## Broadcast an 8-bit unsigned integer value to all elements
-  Mm[N, uint8](mm256_set1_epi8(cast[int8](val)))
+  Mm[32, uint8](mm256_set1_epi8(cast[int8](val)))
 
-template splat*[N](val: uint16): Mm[N, uint16] = 
+template splat*(val: uint16): Mm[16, uint16] = 
   ## Broadcast a 16-bit unsigned integer value to all elements
-  Mm[N, uint16](mm256_set1_epi16(cast[int16](val)))
+  Mm[16, uint16](mm256_set1_epi16(cast[int16](val)))
 
-template splat*[N](val: uint32): Mm[N, uint32] = 
+template splat*(val: uint32): Mm[8, uint32] = 
   ## Broadcast a 32-bit unsigned integer value to all elements
-  Mm[N, uint32](mm256_set1_epi32(cast[int32](val)))
+  Mm[8, uint32](mm256_set1_epi32(cast[int32](val)))
 
-template splat*[N](val: uint64): Mm[N, uint64] = 
+template splat*(val: uint64): Mm[4, uint64] = 
   ## Broadcast a 64-bit unsigned integer value to all elements
-  Mm[N, uint64](mm256_set1_epi64x(cast[int64](val)))
+  Mm[4, uint64](mm256_set1_epi64x(cast[int64](val)))
 
 template set*(e7, e6, e5, e4, e3, e2, e1, e0: float32): Mm[8, float32] = 
   ## Set 8 single-precision floating-point elements with specified values (e7 is highest)
